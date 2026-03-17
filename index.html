@@ -17,34 +17,35 @@
             background: linear-gradient(145deg, #1a1a1a, #263d3d); 
             padding: 40px 10px; 
             border-bottom: 4px solid #DAA520; 
-            text-align: center; /* بيخلي كل حاجة في النص */
+            text-align: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         
         h1 { 
-            font-size: clamp(2em, 8vw, 3.5em); /* حجم مرن للموبايل والكمبيوتر */
+            font-size: clamp(2.5em, 8vw, 4em); 
             color: #DAA520; 
             margin: 0 0 20px 0; 
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-weight: bold;
         }
         
         .contact a { 
             color: #000; 
             text-decoration: none; 
             background: #DAA520; 
-            padding: 12px 25px; 
+            padding: 12px 30px; 
             border-radius: 50px; 
             font-weight: bold; 
             display: inline-flex; 
             align-items: center; 
-            gap: 10px;
+            gap: 12px;
             transition: 0.3s;
-            font-size: 1.1em;
+            font-size: 1.2em;
+            box-shadow: 0 4px 10px rgba(218, 165, 32, 0.3);
         }
         .contact a:hover { transform: scale(1.05); background: #fff; }
         
-        /* شعار الفيسبوك */
-        .fb-icon { width: 24px; height: 24px; }
+        .fb-icon { width: 26px; height: 26px; }
 
         #canvasContainer {
             width: 100vw;
@@ -56,7 +57,7 @@
 
         canvas { display: block; background: #1a1a1a; cursor: crosshair; }
 
-        /* النافذة المنبثقة */
+        /* نافذة التنبيه الشيك */
         .modal {
             display: none;
             position: fixed;
@@ -67,13 +68,16 @@
             border: 2px solid #DAA520;
             padding: 30px;
             text-align: center;
-            border-radius: 15px;
-            min-width: 280px;
+            border-radius: 20px;
+            min-width: 300px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
         }
-        .modal h2 { color: #DAA520; margin-bottom: 15px; }
+        .modal h2 { color: #DAA520; margin-bottom: 15px; font-size: 1.8em; }
+        .modal p { font-size: 1.1em; color: #ccc; line-height: 1.6; }
         .modal button { 
-            background: #DAA520; border: none; padding: 10px 25px; 
-            color: #000; font-weight: bold; cursor: pointer; border-radius: 5px; 
+            background: #DAA520; border: none; padding: 12px 30px; 
+            color: #000; font-weight: bold; cursor: pointer; border-radius: 8px;
+            margin-top: 20px; font-size: 1em;
         }
     </style>
 </head>
@@ -95,8 +99,9 @@
 
     <div id="infoModal" class="modal">
         <h2 id="pixelNumber"></h2>
-        <p>تواصل معنا الآن عبر الفيسبوك لحجز مكانك في النخبة.</p>
-        <button onclick="closeModal()">إغلاق</button>
+        <p>أنت الآن في قلب النخبة!<br>هذا المربع متاح لتمييز مشروعك.</p>
+        <p>تواصل معنا عبر الفيسبوك واحجز مكانك الآن.</p>
+        <button onclick="closeModal()">فهمت</button>
     </div>
 
     <script>
@@ -108,48 +113,55 @@
         canvas.width = cols * pixelSize;
         canvas.height = rows * pixelSize;
 
-        // رسم الخلفية والشبكة
+        // رسم الشبكة الخلفية
         function initCanvas() {
             ctx.fillStyle = "#1a1a1a";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.strokeStyle = "#252525";
             ctx.lineWidth = 0.5;
-            for(let i=0; i<=canvas.width; i+=50) { // خطوط شبكة خفيفة كل 5 مربعات
+            // رسم خطوط استرشادية كل 50 بكسل
+            for(let i=0; i<=canvas.width; i+=50) {
                 ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke();
                 ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke();
             }
         }
 
-        // مصفوفة الصور (هنا هتضيف صورك)
-        const imagesToLoad = [
-            // { id: "1", src: "logos/1.png" }, // مثال
-        ];
-
-        function loadLogos() {
-            imagesToLoad.forEach(item => {
+        // --- الرادار الذكي للصور ---
+        // الموقع هيدور لوحده على الصور من 1 لـ 100 (تقدر تزود الرقم لو عاوز)
+        function loadLogosAuto() {
+            for (let i = 1; i <= 100; i++) {
                 const img = new Image();
-                img.src = item.src;
+                img.src = `logos/${i}.png`; // بيفترض إن الصور بصيغة png
                 img.onload = () => {
-                    item.id.split(" ").forEach(id => {
-                        const n = parseInt(id) - 1;
-                        ctx.drawImage(img, (n%cols)*pixelSize, Math.floor(n/cols)*pixelSize, pixelSize, pixelSize);
-                    });
+                    const n = i - 1;
+                    const x = (n % cols) * pixelSize;
+                    const y = Math.floor(n / cols) * pixelSize;
+                    ctx.drawImage(img, x, y, pixelSize, pixelSize);
                 };
-            });
+            }
         }
 
+        // التفاعل عند الضغط
         canvas.addEventListener('click', function(e) {
             const rect = canvas.getBoundingClientRect();
+            // حساب الإحداثيات بدقة عشان الموبايل والكمبيوتر
             const x = Math.floor((e.clientX - rect.left) / (rect.width / cols));
             const y = Math.floor((e.clientY - rect.top) / (rect.height / rows));
-            document.getElementById('pixelNumber').innerText = "مربع رقم: " + ((y * cols) + x + 1);
+            
+            const pixelId = (y * cols) + x + 1;
+            
+            document.getElementById('pixelNumber').innerText = "مربع رقم: " + pixelId;
             document.getElementById('infoModal').style.display = 'block';
         });
 
-        function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
 
+        // تشغيل الموقع
         initCanvas();
-        loadLogos();
+        loadLogosAuto();
     </script>
 </body>
 </html>
+
