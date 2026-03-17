@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة النخبة | Elite Page</title>
+    <style>
+        /* تصميم الواجهة الفاخرة */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #121212; 
+            color: #FFF; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden;
+        }
+        
+        .header { 
+            background: linear-gradient(145deg, #1a1a1a, #2f4f4f); 
+            padding: 30px 0; 
+            border-bottom: 4px solid #DAA520; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        
+        h1 { 
+            font-size: 3.5em; 
+            color: #DAA520; 
+            margin: 0; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 2px;
+        }
+        
+        .contact { margin-top: 15px; }
+        .contact a { 
+            color: #FFF; 
+            text-decoration: none; 
+            background: #DAA520; 
+            padding: 10px 25px; 
+            border-radius: 50px; 
+            font-weight: bold; 
+            transition: 0.3s;
+            display: inline-flex; 
+            align-items: center; 
+            gap: 10px;
+        }
+        .contact a:hover { transform: scale(1.05); background: #b8860b; }
+        .fb-icon { width: 20px; height: 20px; filter: brightness(0) invert(1); }
+
+        /* حاوية الخريطة (تدعم السحب والتكبير) */
+        #canvasContainer {
+            width: 100vw;
+            height: 80vh;
+            overflow: auto;
+            background: #000;
+            cursor: crosshair;
+            border: 2px solid #333;
+        }
+
+        #pixelCanvas {
+            display: block;
+            background: #1a1a1a;
+        }
+
+        /* نافذة الرسائل المنبثقة (Custom Popup) */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a1a;
+            border: 2px solid #DAA520;
+            padding: 25px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(218, 165, 32, 0.3);
+        }
+        .modal h2 { color: #DAA520; margin-top: 0; }
+        .modal button { 
+            background: #DAA520; border: none; padding: 10px 20px; 
+            color: #000; font-weight: bold; cursor: pointer; border-radius: 5px; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>صفحة النخبة</h1>
+        <div class="contact">
+            <a href="https://www.facebook.com/profile.php?id=61587773337715" target="_blank">
+                تواصل معنا واحجز مكانك في النخبة
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" class="fb-icon" alt="FB">
+            </a>
+        </div>
+    </div>
+
+    <div id="canvasContainer">
+        <canvas id="pixelCanvas"></canvas>
+    </div>
+
+    <div id="infoModal" class="modal">
+        <h2 id="pixelNumber"></h2>
+        <p>هذا المكان متاح للنخبة فقط!</p>
+        <p>تواصل معنا الآن عبر الفيسبوك لحجز مساحتك.</p>
+        <button onclick="closeModal()">إغلاق</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('pixelCanvas');
+        const ctx = canvas.getContext('2d');
+        const modal = document.getElementById('infoModal');
+        const pixelNumText = document.getElementById('pixelNumber');
+
+        // إعدادات المليون بكسل
+        const pixelSize = 10; // كل مربع 10x10 بكسل
+        const cols = 1000;    // 1000 مربع عرض
+        const rows = 1000;    // 1000 مربع طول (المجموع مليون)
+        
+        canvas.width = cols * pixelSize;
+        canvas.height = rows * pixelSize;
+
+        // دالة رسم الشبكة الأساسية (للسرعة)
+        function drawGrid() {
+            ctx.fillStyle = "#1a1a1a";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = "#222";
+            ctx.lineWidth = 0.5;
+
+            // رسم خطوط خفيفة جداً للشبكة
+            for (let i = 0; i <= canvas.width; i += pixelSize * 5) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            }
+            for (let i = 0; i <= canvas.height; i += pixelSize * 5) {
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+            }
+        }
+
+        // مصفوفة لمحاكاة الصور (بما أننا لا نملك وصولاً مباشراً للملفات من المتصفح، سنعرفها هنا)
+        // في الواقع، ستقوم بتسمية صورك في مجلد "logos" وسنقوم باستدعائها برمجياً
+        const imagesToLoad = [
+            { id: "5", src: "logos/5.png" }, // مثال لصورة في المربع رقم 5
+            { id: "10 11 20 21", src: "logos/block1.png" } // مثال لصورة تأخذ 4 مربعات
+        ];
+
+        function loadLogos() {
+            imagesToLoad.forEach(item => {
+                const img = new Image();
+                img.src = item.src;
+                img.onload = () => {
+                    const ids = item.id.split(" ");
+                    ids.forEach(id => {
+                        const num = parseInt(id) - 1;
+                        const x = (num % cols) * pixelSize;
+                        const y = Math.floor(num / cols) * pixelSize;
+                        ctx.drawImage(img, x, y, pixelSize, pixelSize);
+                    });
+                };
+            });
+        }
+
+        // التفاعل عند الضغط
+        canvas.addEventListener('click', function(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = Math.floor((e.clientX - rect.left) * scaleX / pixelSize);
+            const y = Math.floor((e.clientY - rect.top) * scaleY / pixelSize);
+            
+            const pixelId = (y * cols) + x + 1;
+            
+            pixelNumText.innerText = "أنت ضغطت على المربع رقم: " + pixelId;
+            modal.style.display = 'block';
+        });
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // بدء التشغيل
+        drawGrid();
+        loadLogos();
+
+    </script>
+</body>
+</html>
+
