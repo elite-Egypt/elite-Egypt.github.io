@@ -131,7 +131,7 @@
         function loadLogosAuto() {
             for (let i = 1; i <= 100; i++) {
                 const img = new Image();
-                img.src = `logos/${i}.png`; // بيفترض إن الصور بصيغة png
+                img.src = `${i}.png`; // بيفترض إن الصور بصيغة png
                 img.onload = () => {
                     const n = i - 1;
                     const x = (n % cols) * pixelSize;
