@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #FFF; margin: 0; padding: 0; text-align: center; overflow-x: hidden; }
+        body { font-family: sans-serif; background: #121212; color: #FFF; margin: 0; padding: 0; text-align: center; }
         .header { background: linear-gradient(145deg, #1a1a1a, #263d3d); padding: 30px; border-bottom: 4px solid #DAA520; }
-        h1 { font-size: 3em; color: #DAA520; margin: 0 0 15px 0; font-weight: bold; }
-        .contact a { color: #000; text-decoration: none; background: #DAA520; padding: 12px 30px; border-radius: 50px; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
-        .contact a:hover { transform: scale(1.05); background: #fff; }
-        #canvasContainer { width: 100vw; height: 75vh; overflow: auto; background: #000; border-top: 1px solid #333; }
+        h1 { font-size: 3em; color: #DAA520; margin: 0 0 15px 0; }
+        .contact a { color: #000; text-decoration: none; background: #DAA520; padding: 12px 25px; border-radius: 50px; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; }
+        #canvasContainer { width: 100vw; height: 70vh; overflow: auto; background: #000; }
         canvas { display: block; background: #1a1a1a; cursor: crosshair; }
-        .modal { display: none; position: fixed; z-index: 2000; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid #DAA520; padding: 30px; border-radius: 20px; box-shadow: 0 0 40px #000; min-width: 280px; }
-        .modal h2 { color: #DAA520; }
-        .modal button { background: #DAA520; border: none; padding: 10px 25px; cursor: pointer; font-weight: bold; border-radius: 5px; margin-top: 15px; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid #DAA520; padding: 30px; border-radius: 15px; min-width: 250px; }
+        .modal button { background: #DAA520; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -22,19 +20,15 @@
         <h1>صفحة النخبة</h1>
         <div class="contact">
             <a href="https://www.facebook.com/profile.php?id=61587773337715" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="22">
-                تواصل معنا واحجز مكانك في النخبة
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="20">
+                تواصل معنا واحجز مكانك
             </a>
         </div>
     </div>
-
-    <div id="canvasContainer">
-        <canvas id="pixelCanvas"></canvas>
-    </div>
-
+    <div id="canvasContainer"><canvas id="pixelCanvas"></canvas></div>
     <div id="infoModal" class="modal">
         <h2 id="pixelNumber"></h2>
-        <p>تواصل معنا عبر الفيسبوك واحجز مكانك الآن.</p>
+        <p>احجز مكانك في النخبة الآن!</p>
         <button onclick="document.getElementById('infoModal').style.display='none'">إغلاق</button>
     </div>
 
@@ -44,16 +38,18 @@
         const pixelSize = 10, cols = 1000, rows = 1000;
         canvas.width = cols * pixelSize; canvas.height = rows * pixelSize;
 
-        // رسم أرضية سوداء
+        // رسم خلفية سوداء وشبكة خفيفة جداً
         ctx.fillStyle = "#1a1a1a"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = "#222"; ctx.lineWidth = 0.5;
+        for(let i=0; i<canvas.width; i+=50) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
+        for(let i=0; i<canvas.height; i+=50) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
 
-        // الرادار الشامل: بيجرب يفتح الصورة بكل الصيغ (png, jpg, jpeg) أوتوماتيكياً
-        const extensions = ['png', 'jpg', 'jpeg'];
-        
+        // الرادار: بيدور على الصور 1.png و 1.jpg و 1.jpeg في الصفحة الرئيسية
+        const formats = ['png', 'jpg', 'jpeg'];
         for (let i = 1; i <= 100; i++) {
-            extensions.forEach(ext => {
+            formats.forEach(ext => {
                 const img = new Image();
-                img.src = `${i}.${ext}`; // بيجرب يفتح 1.png ثم 1.jpg وهكذا
+                img.src = `${i}.${ext}`; 
                 img.onload = () => {
                     const n = i - 1;
                     ctx.drawImage(img, (n % cols) * pixelSize, Math.floor(n / cols) * pixelSize, pixelSize, pixelSize);
@@ -61,15 +57,16 @@
             });
         }
 
-        // تفاعل الضغط
         canvas.addEventListener('click', function(e) {
             const rect = canvas.getBoundingClientRect();
-            const x = Math.floor((e.clientX - rect.left) / (rect.width / cols));
-            const y = Math.floor((e.clientY - rect.top) / (rect.height / rows));
-            document.getElementById('pixelNumber').innerText = "مربع رقم: " + ((y * cols) + x + 1);
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = Math.floor(((e.clientX - rect.left) * scaleX) / pixelSize);
+            const y = Math.floor(((e.clientY - rect.top) * scaleY) / pixelSize);
+            const id = (y * cols) + x + 1;
+            document.getElementById('pixelNumber').innerText = "مربع رقم: " + id;
             document.getElementById('infoModal').style.display = 'block';
         });
     </script>
 </body>
 </html>
-
