@@ -5,75 +5,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: #FFF; margin: 0; padding: 0; text-align: center; }
-        .header { background: linear-gradient(145deg, #1a1a1a, #263d3d); padding: 30px; border-bottom: 4px solid #DAA520; }
-        h1 { font-size: 3em; color: #DAA520; margin: 0 0 15px 0; }
-        .contact a { color: #000; text-decoration: none; background: #DAA520; padding: 10px 25px; border-radius: 50px; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; }
-        #canvasContainer { width: 100vw; height: 70vh; overflow: auto; background: #000; }
-        canvas { display: block; background: #1a1a1a; cursor: crosshair; }
-        .modal { display: none; position: fixed; z-index: 2000; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid #DAA520; padding: 30px; border-radius: 15px; }
-        .modal button { background: #DAA520; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+        /* ستايل صفحة النخبة الخاص بنا */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #000; 
+            color: #FFF; 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden; /* المنع من السكرول العادي عشان نستخدم سكرول المربعات */
+        }
+        
+        .header { 
+            background: linear-gradient(145deg, #1a1a1a, #263d3d); 
+            padding: 15px; 
+            border-bottom: 3px solid #DAA520; 
+            text-align: center;
+            position: relative;
+            z-index: 100;
+        }
+        
+        h1 { color: #DAA520; margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; }
+        
+        .contact-btn { 
+            display: inline-block;
+            margin-top: 10px;
+            color: #000; 
+            text-decoration: none; 
+            background: #DAA520; 
+            padding: 8px 20px; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            font-size: 0.9em;
+        }
+
+        /* حاوية المربعات - نسخة موقع المليون دولار */
+        #viewport {
+            width: 100vw;
+            height: calc(100vh - 100px);
+            overflow: auto;
+            background: #111;
+            cursor: grab;
+        }
+
+        #canvas-wrapper {
+            position: relative;
+            width: 2000px; /* مساحة ضخمة للمربعات */
+            height: 2000px;
+        }
+
+        canvas { 
+            background-image: 
+                linear-gradient(to right, #222 1px, transparent 1px),
+                linear-gradient(to bottom, #222 1px, transparent 1px);
+            background-size: 20px 20px; /* حجم المربع الواحد */
+            display: block;
+            image-rendering: pixelated; /* سر الوضوح العالي */
+        }
+
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 50%; top: 50%; 
+            transform: translate(-50%, -50%); 
+            background: #1a1a1a; 
+            border: 2px solid #DAA520; 
+            padding: 25px; 
+            border-radius: 15px; 
+            text-align: center;
+            box-shadow: 0 0 30px #000;
+        }
+        
+        .modal button { background: #DAA520; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; margin-top: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
+
     <div class="header">
         <h1>صفحة النخبة</h1>
-        <div class="contact">
-            <a href="https://www.facebook.com/profile.php?id=61587773337715" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="20">
-                تواصل معنا واحجز مكانك
-            </a>
+        <a href="https://www.facebook.com/profile.php?id=61587773337715" class="contact-btn" target="_blank">احجز مكانك في النخبة</a>
+    </div>
+
+    <div id="viewport">
+        <div id="canvas-wrapper">
+            <canvas id="mainCanvas"></canvas>
         </div>
     </div>
-    <div id="canvasContainer"><canvas id="pixelCanvas"></canvas></div>
+
     <div id="infoModal" class="modal">
-        <h2 id="pixelNumber"></h2>
-        <p>احجز مكانك في النخبة الآن!</p>
+        <h2 id="pixelNumber" style="color:#DAA520"></h2>
+        <p>هذه المساحة مخصصة لمشاريع النخبة.</p>
         <button onclick="document.getElementById('infoModal').style.display='none'">إغلاق</button>
     </div>
 
     <script>
-        const canvas = document.getElementById('pixelCanvas');
+        const canvas = document.getElementById('mainCanvas');
         const ctx = canvas.getContext('2d');
-        const pixelSize = 10, cols = 1000, rows = 1000;
-        canvas.width = cols * pixelSize; canvas.height = rows * pixelSize;
+        const pixelSize = 20; // حجم المربع الواحد (زي الموقع الأصلي)
+        const gridSize = 100; // 100x100 مربع
+        
+        canvas.width = gridSize * pixelSize;
+        canvas.height = gridSize * pixelSize;
 
-        // وظيفة رسم الخلفية والشبكة
-        function drawBase() {
-            ctx.fillStyle = "#1a1a1a"; 
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = "#222"; 
-            ctx.lineWidth = 0.5;
-            for(let i=0; i<canvas.width; i+=50) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
-            for(let i=0; i<canvas.height; i+=50) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
-        }
-
-        // الرادار: يبحث عن الصور ويضعها فوق الخلفية
-        function loadImages() {
-            const formats = ['png', 'jpg', 'jpeg'];
+        // وظيفة تحميل الصور وعرضها بحجمها الحقيقي (فكرة المليون دولار)
+        function loadLogos() {
             for (let i = 1; i <= 100; i++) {
-                formats.forEach(ext => {
-                    const img = new Image();
-                    img.src = `${i}.${ext}`; 
-                    img.onload = () => {
-                        const n = i - 1;
-                        ctx.drawImage(img, (n % cols) * pixelSize, Math.floor(n / cols) * pixelSize, pixelSize, pixelSize);
-                    };
-                });
+                const img = new Image();
+                // بيجرب يفتح الصورة سواء png أو jpg
+                img.src = `${i}.png`;
+                img.onerror = () => { img.src = `${i}.jpg`; };
+                
+                img.onload = () => {
+                    const n = i - 1;
+                    const x = (n % gridSize) * pixelSize;
+                    const y = Math.floor(n / gridSize) * pixelSize;
+                    
+                    // هنا السر: الصورة بتترسم بحجمها الطبيعي عشان تبان واضحة جداً
+                    ctx.imageSmoothingEnabled = false;
+                    ctx.drawImage(img, x, y, pixelSize, pixelSize);
+                };
             }
         }
 
+        // تفاعل الضغط لمعرفة رقم المربع
         canvas.addEventListener('click', function(e) {
             const rect = canvas.getBoundingClientRect();
-            const x = Math.floor((e.clientX - rect.left) / (rect.width / cols));
-            const y = Math.floor((e.clientY - rect.top) / (rect.height / rows));
-            document.getElementById('pixelNumber').innerText = "مربع رقم: " + ((y * cols) + x + 1);
+            const x = Math.floor((e.clientX - rect.left) / pixelSize);
+            const y = Math.floor((e.clientY - rect.top) / pixelSize);
+            const id = (y * gridSize) + x + 1;
+            
+            document.getElementById('pixelNumber').innerText = "مربع رقم: " + id;
             document.getElementById('infoModal').style.display = 'block';
         });
 
-        // التنفيذ بالترتيب الصحيح
-        drawBase();
-        setTimeout(loadImages, 1000); // ينتظر ثانية للتأكد من استقرار الموقع ثم يرفع الصور
+        loadLogos();
     </script>
 </body>
 </html>
