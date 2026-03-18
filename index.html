@@ -2,88 +2,23 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        /* ستايل صفحة النخبة الخاص بنا */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #000; 
-            color: #FFF; 
-            margin: 0; 
-            padding: 0; 
-            overflow: hidden; /* المنع من السكرول العادي عشان نستخدم سكرول المربعات */
-        }
-        
-        .header { 
-            background: linear-gradient(145deg, #1a1a1a, #263d3d); 
-            padding: 15px; 
-            border-bottom: 3px solid #DAA520; 
-            text-align: center;
-            position: relative;
-            z-index: 100;
-        }
-        
-        h1 { color: #DAA520; margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; }
-        
-        .contact-btn { 
-            display: inline-block;
-            margin-top: 10px;
-            color: #000; 
-            text-decoration: none; 
-            background: #DAA520; 
-            padding: 8px 20px; 
-            border-radius: 20px; 
-            font-weight: bold; 
-            font-size: 0.9em;
-        }
-
-        /* حاوية المربعات - نسخة موقع المليون دولار */
-        #viewport {
-            width: 100vw;
-            height: calc(100vh - 100px);
-            overflow: auto;
-            background: #111;
-            cursor: grab;
-        }
-
-        #canvas-wrapper {
-            position: relative;
-            width: 2000px; /* مساحة ضخمة للمربعات */
-            height: 2000px;
-        }
-
-        canvas { 
-            background-image: 
-                linear-gradient(to right, #222 1px, transparent 1px),
-                linear-gradient(to bottom, #222 1px, transparent 1px);
-            background-size: 20px 20px; /* حجم المربع الواحد */
-            display: block;
-            image-rendering: pixelated; /* سر الوضوح العالي */
-        }
-
-        .modal { 
-            display: none; 
-            position: fixed; 
-            z-index: 2000; 
-            left: 50%; top: 50%; 
-            transform: translate(-50%, -50%); 
-            background: #1a1a1a; 
-            border: 2px solid #DAA520; 
-            padding: 25px; 
-            border-radius: 15px; 
-            text-align: center;
-            box-shadow: 0 0 30px #000;
-        }
-        
-        .modal button { background: #DAA520; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; margin-top: 10px; border-radius: 5px; }
+        body { font-family: sans-serif; background: #000; color: #FFF; margin: 0; padding: 0; overflow: hidden; }
+        .header { background: #1a1a1a; padding: 15px; border-bottom: 3px solid #DAA520; text-align: center; position: relative; z-index: 100; }
+        h1 { color: #DAA520; margin: 0; font-size: 1.5em; }
+        #viewport { width: 100vw; height: calc(100vh - 80px); overflow: auto; background: #111; -webkit-overflow-scrolling: touch; }
+        #canvas-wrapper { position: relative; width: 2000px; height: 2000px; }
+        canvas { display: block; image-rendering: pixelated; background-color: #1a1a1a; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid #DAA520; padding: 20px; border-radius: 10px; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <h1>صفحة النخبة</h1>
-        <a href="https://www.facebook.com/profile.php?id=61587773337715" class="contact-btn" target="_blank">احجز مكانك في النخبة</a>
+        <a href="https://www.facebook.com/profile.php?id=61587773337715" style="color:#DAA520; text-decoration:none; font-size:14px; font-weight:bold;">احجز مكانك الآن</a>
     </div>
 
     <div id="viewport">
@@ -92,53 +27,46 @@
         </div>
     </div>
 
-    <div id="infoModal" class="modal">
-        <h2 id="pixelNumber" style="color:#DAA520"></h2>
-        <p>هذه المساحة مخصصة لمشاريع النخبة.</p>
-        <button onclick="document.getElementById('infoModal').style.display='none'">إغلاق</button>
-    </div>
-
     <script>
         const canvas = document.getElementById('mainCanvas');
         const ctx = canvas.getContext('2d');
-        const pixelSize = 20; // حجم المربع الواحد (زي الموقع الأصلي)
-        const gridSize = 100; // 100x100 مربع
+        const pixelSize = 20; 
+        const gridSize = 100; 
         
         canvas.width = gridSize * pixelSize;
         canvas.height = gridSize * pixelSize;
 
-        // وظيفة تحميل الصور وعرضها بحجمها الحقيقي (فكرة المليون دولار)
-        function loadLogos() {
-            for (let i = 1; i <= 100; i++) {
-                const img = new Image();
-                // بيجرب يفتح الصورة سواء png أو jpg
-                img.src = `${i}.png`;
-                img.onerror = () => { img.src = `${i}.jpg`; };
-                
-                img.onload = () => {
-                    const n = i - 1;
-                    const x = (n % gridSize) * pixelSize;
-                    const y = Math.floor(n / gridSize) * pixelSize;
-                    
-                    // هنا السر: الصورة بتترسم بحجمها الطبيعي عشان تبان واضحة جداً
-                    ctx.imageSmoothingEnabled = false;
-                    ctx.drawImage(img, x, y, pixelSize, pixelSize);
-                };
-            }
+        // رسم الشبكة فوراً
+        function drawGrid() {
+            ctx.fillStyle = "#1a1a1a";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = "#333";
+            ctx.lineWidth = 0.5;
+            for(let i=0; i<=canvas.width; i+=pixelSize) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
+            for(let i=0; i<=canvas.height; i+=pixelSize) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
         }
 
-        // تفاعل الضغط لمعرفة رقم المربع
-        canvas.addEventListener('click', function(e) {
-            const rect = canvas.getBoundingClientRect();
-            const x = Math.floor((e.clientX - rect.left) / pixelSize);
-            const y = Math.floor((e.clientY - rect.top) / pixelSize);
-            const id = (y * gridSize) + x + 1;
+        // تحميل صورة ترامب (رقم 1) بشكل مباشر وصريح
+        function loadImages() {
+            const img = new Image();
+            // السطر ده هو الأهم: بينادي على الصورة باسمها اللي موجود في الـ GitHub
+            img.src = "1.png"; 
             
-            document.getElementById('pixelNumber').innerText = "مربع رقم: " + id;
-            document.getElementById('infoModal').style.display = 'block';
-        });
+            img.onload = () => {
+                ctx.imageSmoothingEnabled = false;
+                // رسم الصورة في المربع الأول (0,0)
+                ctx.drawImage(img, 0, 0, pixelSize, pixelSize);
+                console.log("الصورة رقم 1 نزلت بنجاح!");
+            };
+            
+            img.onerror = () => {
+                console.error("المتصفح مش لاقي صورة اسمها 1.png");
+            };
+        }
 
-        loadLogos();
+        drawGrid();
+        // بنستنى نص ثانية عشان نضمن إن الصفحة حملت تمام
+        setTimeout(loadImages, 500);
     </script>
 </body>
 </html>
