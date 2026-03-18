@@ -5,89 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #121212; 
-            color: #FFF; 
-            margin: 0; 
-            padding: 0; 
-        }
-        
-        .header { 
-            background: linear-gradient(145deg, #1a1a1a, #263d3d); 
-            padding: 40px 10px; 
-            border-bottom: 4px solid #DAA520; 
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-        }
-        
-        h1 { 
-            font-size: clamp(2.5em, 8vw, 4em); 
-            color: #DAA520; 
-            margin: 0 0 20px 0; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            font-weight: bold;
-        }
-        
-        .contact a { 
-            color: #000; 
-            text-decoration: none; 
-            background: #DAA520; 
-            padding: 12px 30px; 
-            border-radius: 50px; 
-            font-weight: bold; 
-            display: inline-flex; 
-            align-items: center; 
-            gap: 12px;
-            transition: 0.3s;
-            font-size: 1.2em;
-            box-shadow: 0 4px 10px rgba(218, 165, 32, 0.3);
-        }
+        body { font-family: sans-serif; background: #121212; color: #FFF; margin: 0; padding: 0; text-align: center; overflow-x: hidden; }
+        .header { background: linear-gradient(145deg, #1a1a1a, #263d3d); padding: 30px; border-bottom: 4px solid #DAA520; }
+        h1 { font-size: 3em; color: #DAA520; margin: 0 0 15px 0; font-weight: bold; }
+        .contact a { color: #000; text-decoration: none; background: #DAA520; padding: 12px 30px; border-radius: 50px; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; }
         .contact a:hover { transform: scale(1.05); background: #fff; }
-        
-        .fb-icon { width: 26px; height: 26px; }
-
-        #canvasContainer {
-            width: 100vw;
-            height: 70vh;
-            overflow: auto;
-            background: #000;
-            border-top: 1px solid #333;
-        }
-
+        #canvasContainer { width: 100vw; height: 75vh; overflow: auto; background: #000; border-top: 1px solid #333; }
         canvas { display: block; background: #1a1a1a; cursor: crosshair; }
-
-        /* نافذة التنبيه الشيك */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 50%; top: 50%;
-            transform: translate(-50%, -50%);
-            background: #1a1a1a;
-            border: 2px solid #DAA520;
-            padding: 30px;
-            text-align: center;
-            border-radius: 20px;
-            min-width: 300px;
-            box-shadow: 0 0 40px rgba(0,0,0,0.9);
-        }
-        .modal h2 { color: #DAA520; margin-bottom: 15px; font-size: 1.8em; }
-        .modal p { font-size: 1.1em; color: #ccc; line-height: 1.6; }
-        .modal button { 
-            background: #DAA520; border: none; padding: 12px 30px; 
-            color: #000; font-weight: bold; cursor: pointer; border-radius: 8px;
-            margin-top: 20px; font-size: 1em;
-        }
+        .modal { display: none; position: fixed; z-index: 2000; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid #DAA520; padding: 30px; border-radius: 20px; box-shadow: 0 0 40px #000; min-width: 280px; }
+        .modal h2 { color: #DAA520; }
+        .modal button { background: #DAA520; border: none; padding: 10px 25px; cursor: pointer; font-weight: bold; border-radius: 5px; margin-top: 15px; }
     </style>
 </head>
 <body>
-
     <div class="header">
         <h1>صفحة النخبة</h1>
         <div class="contact">
             <a href="https://www.facebook.com/profile.php?id=61587773337715" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" class="fb-icon" alt="FB">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="22">
                 تواصل معنا واحجز مكانك في النخبة
             </a>
         </div>
@@ -99,68 +34,41 @@
 
     <div id="infoModal" class="modal">
         <h2 id="pixelNumber"></h2>
-        <p>أنت الآن في قلب النخبة!<br>هذا المربع متاح لتمييز مشروعك.</p>
         <p>تواصل معنا عبر الفيسبوك واحجز مكانك الآن.</p>
-        <button onclick="closeModal()">فهمت</button>
+        <button onclick="document.getElementById('infoModal').style.display='none'">إغلاق</button>
     </div>
 
     <script>
         const canvas = document.getElementById('pixelCanvas');
         const ctx = canvas.getContext('2d');
-        const pixelSize = 10;
-        const cols = 1000;
-        const rows = 1000;
-        canvas.width = cols * pixelSize;
-        canvas.height = rows * pixelSize;
+        const pixelSize = 10, cols = 1000, rows = 1000;
+        canvas.width = cols * pixelSize; canvas.height = rows * pixelSize;
 
-        // رسم الشبكة الخلفية
-        function initCanvas() {
-            ctx.fillStyle = "#1a1a1a";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = "#252525";
-            ctx.lineWidth = 0.5;
-            // رسم خطوط استرشادية كل 50 بكسل
-            for(let i=0; i<=canvas.width; i+=50) {
-                ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke();
-            }
-        }
+        // رسم أرضية سوداء
+        ctx.fillStyle = "#1a1a1a"; ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // --- الرادار الذكي للصور ---
-        // الموقع هيدور لوحده على الصور من 1 لـ 100 (تقدر تزود الرقم لو عاوز)
-        function loadLogosAuto() {
-            for (let i = 1; i <= 100; i++) {
+        // الرادار الشامل: بيجرب يفتح الصورة بكل الصيغ (png, jpg, jpeg) أوتوماتيكياً
+        const extensions = ['png', 'jpg', 'jpeg'];
+        
+        for (let i = 1; i <= 100; i++) {
+            extensions.forEach(ext => {
                 const img = new Image();
-                img.src = `${i}.png`; // بيفترض إن الصور بصيغة png
+                img.src = `${i}.${ext}`; // بيجرب يفتح 1.png ثم 1.jpg وهكذا
                 img.onload = () => {
                     const n = i - 1;
-                    const x = (n % cols) * pixelSize;
-                    const y = Math.floor(n / cols) * pixelSize;
-                    ctx.drawImage(img, x, y, pixelSize, pixelSize);
+                    ctx.drawImage(img, (n % cols) * pixelSize, Math.floor(n / cols) * pixelSize, pixelSize, pixelSize);
                 };
-            }
+            });
         }
 
-        // التفاعل عند الضغط
+        // تفاعل الضغط
         canvas.addEventListener('click', function(e) {
             const rect = canvas.getBoundingClientRect();
-            // حساب الإحداثيات بدقة عشان الموبايل والكمبيوتر
             const x = Math.floor((e.clientX - rect.left) / (rect.width / cols));
             const y = Math.floor((e.clientY - rect.top) / (rect.height / rows));
-            
-            const pixelId = (y * cols) + x + 1;
-            
-            document.getElementById('pixelNumber').innerText = "مربع رقم: " + pixelId;
+            document.getElementById('pixelNumber').innerText = "مربع رقم: " + ((y * cols) + x + 1);
             document.getElementById('infoModal').style.display = 'block';
         });
-
-        function closeModal() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
-
-        // تشغيل الموقع
-        initCanvas();
-        loadLogosAuto();
     </script>
 </body>
 </html>
