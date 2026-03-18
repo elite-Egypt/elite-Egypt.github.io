@@ -8,11 +8,11 @@
         body { font-family: sans-serif; background: #121212; color: #FFF; margin: 0; padding: 0; text-align: center; }
         .header { background: linear-gradient(145deg, #1a1a1a, #263d3d); padding: 30px; border-bottom: 4px solid #DAA520; }
         h1 { font-size: 3em; color: #DAA520; margin: 0 0 15px 0; }
-        .contact a { color: #000; text-decoration: none; background: #DAA520; padding: 12px 25px; border-radius: 50px; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; }
+        .contact a { color: #000; text-decoration: none; background: #DAA520; padding: 10px 25px; border-radius: 50px; font-weight: bold; display: inline-flex; align-items: center; gap: 10px; }
         #canvasContainer { width: 100vw; height: 70vh; overflow: auto; background: #000; }
         canvas { display: block; background: #1a1a1a; cursor: crosshair; }
-        .modal { display: none; position: fixed; z-index: 2000; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid #DAA520; padding: 30px; border-radius: 15px; min-width: 250px; }
-        .modal button { background: #DAA520; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .modal { display: none; position: fixed; z-index: 2000; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #1a1a1a; border: 2px solid #DAA520; padding: 30px; border-radius: 15px; }
+        .modal button { background: #DAA520; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -38,35 +38,42 @@
         const pixelSize = 10, cols = 1000, rows = 1000;
         canvas.width = cols * pixelSize; canvas.height = rows * pixelSize;
 
-        // رسم خلفية سوداء وشبكة خفيفة جداً
-        ctx.fillStyle = "#1a1a1a"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = "#222"; ctx.lineWidth = 0.5;
-        for(let i=0; i<canvas.width; i+=50) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
-        for(let i=0; i<canvas.height; i+=50) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
+        // وظيفة رسم الخلفية والشبكة
+        function drawBase() {
+            ctx.fillStyle = "#1a1a1a"; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = "#222"; 
+            ctx.lineWidth = 0.5;
+            for(let i=0; i<canvas.width; i+=50) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
+            for(let i=0; i<canvas.height; i+=50) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
+        }
 
-        // الرادار: بيدور على الصور 1.png و 1.jpg و 1.jpeg في الصفحة الرئيسية
-        const formats = ['png', 'jpg', 'jpeg'];
-        for (let i = 1; i <= 100; i++) {
-            formats.forEach(ext => {
-                const img = new Image();
-                img.src = `${i}.${ext}`; 
-                img.onload = () => {
-                    const n = i - 1;
-                    ctx.drawImage(img, (n % cols) * pixelSize, Math.floor(n / cols) * pixelSize, pixelSize, pixelSize);
-                };
-            });
+        // الرادار: يبحث عن الصور ويضعها فوق الخلفية
+        function loadImages() {
+            const formats = ['png', 'jpg', 'jpeg'];
+            for (let i = 1; i <= 100; i++) {
+                formats.forEach(ext => {
+                    const img = new Image();
+                    img.src = `${i}.${ext}`; 
+                    img.onload = () => {
+                        const n = i - 1;
+                        ctx.drawImage(img, (n % cols) * pixelSize, Math.floor(n / cols) * pixelSize, pixelSize, pixelSize);
+                    };
+                });
+            }
         }
 
         canvas.addEventListener('click', function(e) {
             const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const x = Math.floor(((e.clientX - rect.left) * scaleX) / pixelSize);
-            const y = Math.floor(((e.clientY - rect.top) * scaleY) / pixelSize);
-            const id = (y * cols) + x + 1;
-            document.getElementById('pixelNumber').innerText = "مربع رقم: " + id;
+            const x = Math.floor((e.clientX - rect.left) / (rect.width / cols));
+            const y = Math.floor((e.clientY - rect.top) / (rect.height / rows));
+            document.getElementById('pixelNumber').innerText = "مربع رقم: " + ((y * cols) + x + 1);
             document.getElementById('infoModal').style.display = 'block';
         });
+
+        // التنفيذ بالترتيب الصحيح
+        drawBase();
+        setTimeout(loadImages, 1000); // ينتظر ثانية للتأكد من استقرار الموقع ثم يرفع الصور
     </script>
 </body>
 </html>
