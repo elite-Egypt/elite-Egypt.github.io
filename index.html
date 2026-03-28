@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        /* ستايل صفحة النخبة الملكي */
+        /* ستايل صفحة النخبة - إصدار الـ 2 مليون جنيه */
         body { 
             margin: 0; 
             background: #000; 
             color: #DAA520; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            overflow: hidden; 
+            overflow-x: hidden; 
         }
 
         .header { 
@@ -19,14 +19,14 @@
             padding: 15px; 
             border-bottom: 3px solid #DAA520; 
             text-align: center;
-            position: relative;
+            position: sticky; 
+            top: 0;
             z-index: 1000;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
         h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
-        /* زر التواصل بالفيسبوك */
         .fb-contact {
             display: inline-flex;
             align-items: center;
@@ -43,34 +43,33 @@
         }
         .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* منطقة العرض (المساحة المليون بكسل) */
+        /* منطقة العرض العملاقة */
         #viewport {
             width: 100vw;
-            height: calc(100vh - 120px);
-            overflow: auto;
             background: #111;
-            cursor: grab;
             -webkit-overflow-scrolling: touch;
         }
 
         #canvas-wrapper {
             position: relative;
-            width: 1000px; /* العرض الثابت للمليون دولار */
-            height: 1000px; /* الطول الثابت للمليون دولار */
+            width: 1080px; /* العرض المثالي للموبايل */
+            height: 50000px; /* الطول اللي هيكسر الـ 2 مليون جنيه */
             margin: 0 auto;
             border: 1px solid #333;
+            background-color: #000;
         }
 
-        /* اللوحة اللي بتعرض صورة الـ all.png */
+        /* اللوحة الرئيسية بصيغة WebP الصاروخية */
         #main-image {
             display: block;
-            width: 1000px;
-            height: 1000px;
-            image-rendering: pixelated; /* سر الوضوح العالي جداً */
+            width: 1080px;
+            height: 50000px;
+            image-rendering: -webkit-optimize-contrast; /* لأعلى وضوح للوجوهات */
+            /* شبكة المربعات (108 بكسل) */
             background-image: 
                 linear-gradient(to right, #222 1px, transparent 1px),
                 linear-gradient(to bottom, #222 1px, transparent 1px);
-            background-size: 10px 10px; /* شبكة المربعات الصغيرة */
+            background-size: 108px 108px;
         }
     </style>
 </head>
@@ -86,7 +85,7 @@
 
     <div id="viewport">
         <div id="canvas-wrapper">
-            <img src="all.png" id="main-image" usemap="#pixelmap">
+            <img src="all.webp" id="main-image" usemap="#pixelmap">
             
             <map name="pixelmap" id="map-links">
                 </map>
