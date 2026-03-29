@@ -1,5 +1,6 @@
 // قائمة زبائن صفحة النخبة - ضيف سطر الزبون بين القوسين [ ]
-const clients = [
+const clients = [{ coords: "450,4777,545,4889", url: "https://www.facebook.com/profile.php?id=61579668155861", title: "الزبون رقم 1" },
+
 
 ];
 
