@@ -52,14 +52,13 @@
             display: flex;
             justify-content: center;
             overflow-y: auto;
-            /* التعديل هنا: عشان اللوجو ما يختفيش تحت الهيدر */
             padding-top: 10px;
         }
 
         #canvas-wrapper {
             position: relative;
-            width: 1080px; /* العرض الثابت */
-            height: 10000px; /* الطول اللي اتفقنا عليه */
+            width: 1080px; 
+            height: 10000px; 
             background-color: #000;
             border-left: 1px solid #333;
             border-right: 1px solid #333;
@@ -101,7 +100,11 @@
         </div>
     </div>
 
-    <script src="links.js"></script>
+    <script>
+      var script = document.createElement('script');
+      script.src = 'links.js?v=' + Date.now(); 
+      document.head.appendChild(script);
+    </script>
 
 </body>
 </html>
