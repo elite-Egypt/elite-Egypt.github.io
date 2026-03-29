@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        /* الستايل الملكي الأسود والذهبي */
+        /* ستايل صفحة النخبة - إصدار النص مليون جنيه */
         body { 
             margin: 0; 
             background: #000; 
@@ -14,7 +14,7 @@
             overflow-x: hidden; 
         }
 
-        /* الهيدر الثابت */
+        /* الهيدر الملكي الثابت */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; 
@@ -26,8 +26,9 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; }
+        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
+        /* زرار التواصل */
         .fb-contact {
             display: inline-flex;
             align-items: center;
@@ -42,35 +43,43 @@
             margin-top: 10px;
             transition: 0.3s;
         }
+        .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
         /* حاوية العرض */
         #viewport {
             width: 100vw;
+            background: #111;
             display: flex;
             justify-content: center;
-            background: #111;
+            overflow-y: auto;
+            /* التعديل هنا: عشان اللوجو ما يختفيش تحت الهيدر */
+            padding-top: 10px;
         }
 
         #canvas-wrapper {
             position: relative;
-            width: 1080px; 
-            height: 10000px; /* مقاس النص مليون جنيه */
+            width: 1080px; /* العرض الثابت */
+            height: 10000px; /* الطول اللي اتفقنا عليه */
             background-color: #000;
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
         }
 
+        /* الصورة الرئيسية بصيغة WebP الصاروخية */
         #main-image {
             display: block;
             width: 1080px;
             height: 10000px;
-            image-rendering: -webkit-optimize-contrast;
-            /* الشبكة الوهمية للتنظيم */
+            image-rendering: -webkit-optimize-contrast; 
             background-image: 
                 linear-gradient(to right, #1a1a1a 1px, transparent 1px),
                 linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
             background-size: 108px 108px;
         }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 <body>
@@ -78,6 +87,7 @@
     <div class="header">
         <h1>صفحة النخبة</h1>
         <a href="https://www.facebook.com/profile.php?id=61587773337715" class="fb-contact" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="18">
             تواصل معنا عبر فيسبوك
         </a>
     </div>
@@ -86,7 +96,8 @@
         <div id="canvas-wrapper">
             <img src="all.webp" id="main-image" usemap="#pixelmap">
             
-            <map name="pixelmap" id="map-links"></map>
+            <map name="pixelmap" id="map-links">
+            </map>
         </div>
     </div>
 
@@ -94,4 +105,3 @@
 
 </body>
 </html>
-
