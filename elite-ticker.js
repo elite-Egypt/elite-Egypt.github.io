@@ -1,18 +1,19 @@
 // ==========================================
-// 🛠️ لوحة تحكم النخبة (عدل هنا بس يا كينج)
+// 🛠️ لوحة تحكم النخبة (الملف الشامل - نسخة 2026)
 // ==========================================
 
 const الإعلان = "💎 انضم الآن إلى نخبة المجتمع المصري.. مساحات إعلانية مميزة تضع مشروعك في الصدارة 💎";
 
-const يختفي_الساعة = 555; 
+const يختفي_الساعة = 555; // ثابت للأبد
 
 const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=61587773337715"; 
 
 // ==========================================
-// ⚠️ كود التشغيل الذكي (معدل ليظهر أسفل الـ Header)
+// ⚠️ المحرك الذكي (تصميم + تشغيل + ربط تلقائي)
 // ==========================================
 
 (function() {
+    // 1. صناعة التصميم الذهبي وزق الشريط تحت اللوجو أوتوماتيك
     const style = document.createElement('style');
     style.innerHTML = `
         #elite-ticker-container {
@@ -21,11 +22,11 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
             border-bottom: 2px solid #b59410;
             height: 40px;
             overflow: hidden;
-            position: relative; /* خليه يزق اللي تحته */
+            position: relative;
             display: flex;
             align-items: center;
             z-index: 9999;
-            margin-top: 70px; /* 👈 دي أهم حتة: بتزق الشريط تحت اللوجو بتاعك */
+            margin-top: 65px; /* المسافة اللي بتخليه يظهر تحت اللوجو والقائمة */
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         .ticker-content {
@@ -42,15 +43,25 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
             0% { transform: translateX(0); }
             100% { transform: translateX(-100%); }
         }
+        #elite-ticker-container:hover .ticker-content {
+            animation-play-state: paused;
+        }
+        .fb-link {
+            color: #fff !important;
+            text-decoration: underline !important;
+            margin-left: 10px;
+        }
     `;
     document.head.appendChild(style);
 
+    // 2. بناء وظيفة التشغيل
     function initTicker() {
         if (document.getElementById('elite-ticker-container')) return;
+        
         const container = document.createElement('div');
         container.id = 'elite-ticker-container';
         
-        // جربنا نحطه في الأول، دلوقت هنحطه بعد الـ Header لو موجود
+        // بيحط نفسه في أول الصفحة والـ CSS اللي فوق بيزقه تحت اللوجو
         document.body.prepend(container);
 
         const content = document.createElement('div');
@@ -58,12 +69,22 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
         container.appendChild(content);
 
         function checkTime() {
-            content.innerHTML = الإعلان;
+            const now = new Date();
+            let h = now.getHours();
+            let h12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
+
+            if (h12 < يختفي_الساعة) {
+                content.innerHTML = الإعلان;
+            } else {
+                content.innerHTML = `📢 مساحة إعلانية شاغرة في شريط النخبة.. للحجز تواصل معنا <a href="${رابط_فيسبوك}" target="_blank" class="fb-link">عبر فيسبوك من هنا</a>`;
+            }
         }
 
         checkTime();
+        setInterval(checkTime, 60000);
     }
 
+    // 3. الربط الذاتي: الكود ده بيخلي الملف يشغل نفسه أول ما الصفحة تفتح
     if (document.readyState === 'complete') {
         initTicker();
     } else {
