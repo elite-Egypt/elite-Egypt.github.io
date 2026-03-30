@@ -1,48 +1,44 @@
 /* elite-ticker.css */
 
-/* 1. الحاوية اللي شايلة الشريط (متظبطة تظهر تحت اللوجو فوراً) */
+/* 1. الحاوية الرئيسية (بتظهر في أول الصفحة وتزق اللي تحتها) */
 #elite-ticker-container {
     width: 100%;
-    background: rgba(0, 0, 0, 0.85); /* أسود ملكي شفاف سنة */
+    background: rgba(0, 0, 0, 0.9); /* أسود ملكي */
     border-bottom: 2px solid #b59410; /* الخط الذهبي الفخم */
-    height: 40px; /* طول الشريط */
-    overflow: hidden; /* عشان الكلام ميهربش بره */
-    position: relative;
+    height: 40px; 
+    overflow: hidden;
+    position: relative; /* خيناه Relative عشان يزق المربعات تحت وما يغطيش عليها */
     display: flex;
     align-items: center;
-    z-index: 1000; /* أعلى رقم عشان يظهر فوق الخريطة وتحت اللوجو */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.6); /* ضل يدي فخامة */
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    margin-top: 0; /* لو عاوزه تحت اللوجو بالظبط، اتأكد إن اللوجو مش Absolute */
 }
 
-/* 2. حركة الكلام (السرعة المظبوطة) */
+/* 2. تحريك الكلام (السرعة المظبوطة) */
 .ticker-content {
     display: inline-block;
     white-space: nowrap;
-    padding-left: 100%; /* بيبدأ من اليمين خالص */
-    /* السرعة هنا 25 ثانية.. لا هي سريعة تدوخ ولا بطيئة تزهق */
-    animation: ticker-scroll 25s linear infinite; 
-    color: #b59410; /* اللون الذهبي الصريح */
-    font-family: 'Cairo', sans-serif; /* خط النخبة */
-    font-size: 17px; /* حجم خط واضح */
-    font-weight: 700; /* خط تقيل (Bold) */
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.5); /* ضل للكلام عشان يظهر أكتر */
+    padding-left: 100%;
+    animation: ticker-scroll 25s linear infinite; /* سرعة هادية زي التليفزيون */
+    color: #b59410; /* اللون الذهبي */
+    font-family: 'Cairo', sans-serif;
+    font-size: 17px;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
-/* 3. الأنيماشين بتاع الحركة من اليمين للشمال */
 @keyframes ticker-scroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-100%); }
 }
 
-/* 4. تريكة الوقوف بالماوس عشان العميل يلحق يقرأ أو يدوس */
+/* 3. تريكة "زق المربعات": بنخلي الصفحة كلها تنزل 40 بكسل أول ما الشريط يظهر */
+body {
+    padding-top: 0px; /* هيتعدل أوتوماتيك لو الشريط موجود */
+}
+
+/* لما نوقف بالماوس يثبت */
 #elite-ticker-container:hover .ticker-content {
     animation-play-state: paused;
 }
-
-/* 5. شكل اللينك لو حطيت رابط فيسبوك */
-#elite-ticker-container a {
-    color: #ffffff;
-    text-decoration: underline;
-    margin-right: 15px;
-}
-
