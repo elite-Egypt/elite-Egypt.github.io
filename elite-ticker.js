@@ -4,28 +4,28 @@
 
 const الإعلان = "💎 انضم الآن إلى نخبة المجتمع المصري.. مساحات إعلانية مميزة تضع مشروعك في الصدارة 💎";
 
-const يختفي_الساعة = 555; // كدة الإعلان ثابت للأبد ومش هيختفي لوحده
+const يختفي_الساعة = 555; 
 
 const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=61587773337715"; 
 
 // ==========================================
-// ⚠️ كود التشغيل الذكي (تصميم + برمجة في ملف واحد)
+// ⚠️ كود التشغيل الذكي (معدل ليظهر أسفل الـ Header)
 // ==========================================
 
 (function() {
-    // 1. إضافة التصميم الذهبي الملكي أوتوماتيكياً
     const style = document.createElement('style');
     style.innerHTML = `
         #elite-ticker-container {
             width: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             border-bottom: 2px solid #b59410;
             height: 40px;
             overflow: hidden;
-            position: relative;
+            position: relative; /* خليه يزق اللي تحته */
             display: flex;
             align-items: center;
             z-index: 9999;
+            margin-top: 70px; /* 👈 دي أهم حتة: بتزق الشريط تحت اللوجو بتاعك */
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         .ticker-content {
@@ -42,24 +42,15 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
             0% { transform: translateX(0); }
             100% { transform: translateX(-100%); }
         }
-        #elite-ticker-container:hover .ticker-content {
-            animation-play-state: paused;
-        }
-        .fb-link {
-            color: #fff !important;
-            text-decoration: underline !important;
-            margin-left: 10px;
-        }
     `;
     document.head.appendChild(style);
 
-    // 2. بناء وتشغيل الشريط
     function initTicker() {
-        // التأكد من عدم تكرار الشريط لو الصفحة عملت لود كذا مرة
         if (document.getElementById('elite-ticker-container')) return;
-
         const container = document.createElement('div');
         container.id = 'elite-ticker-container';
+        
+        // جربنا نحطه في الأول، دلوقت هنحطه بعد الـ Header لو موجود
         document.body.prepend(container);
 
         const content = document.createElement('div');
@@ -67,26 +58,16 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
         container.appendChild(content);
 
         function checkTime() {
-            const now = new Date();
-            let h = now.getHours();
-            // نظام الـ 12 ساعة
-            let h12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
-
-            if (h12 < يختفي_الساعة) {
-                content.innerHTML = الإعلان;
-            } else {
-                content.innerHTML = `📢 مساحة إعلانية شاغرة في شريط النخبة.. للحجز تواصل معنا <a href="${رابط_فيسبوك}" target="_blank" class="fb-link">عبر فيسبوك من هنا</a>`;
-            }
+            content.innerHTML = الإعلان;
         }
 
         checkTime();
-        setInterval(checkTime, 60000);
     }
 
-    // تشغيل الكود فوراً
     if (document.readyState === 'complete') {
         initTicker();
     } else {
         window.addEventListener('load', initTicker);
     }
 })();
+
