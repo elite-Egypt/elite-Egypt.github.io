@@ -1,19 +1,19 @@
 // ==========================================
-// 🛠️ لوحة تحكم النخبة (الملف الشامل - نسخة 2026)
+// 🛠️ لوحة تحكم النخبة (عدل هنا بس يا غالي)
 // ==========================================
 
 const الإعلان = "💎 انضم الآن إلى نخبة المجتمع المصري.. مساحات إعلانية مميزة تضع مشروعك في الصدارة 💎";
 
-const يختفي_الساعة = 555; // ثابت للأبد
+const يختفي_الساعة = 555; // اكتب الساعة اللي الإعلان يختفي فيها (مثلاً 5) أو سيبها 555 عشان يفضل ثابت
 
-const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=61587773337715"; 
+const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=61587773337715";
 
 // ==========================================
-// ⚠️ المحرك الذكي (تصميم + تشغيل + ربط تلقائي)
+// ⚠️ المحرك الذكي (تصميم + تشغيل + توقيت)
 // ==========================================
 
 (function() {
-    // 1. صناعة التصميم الذهبي وزق الشريط تحت اللوجو أوتوماتيك
+    // 1. إضافة التصميم الذهبي والمسافة تحت اللوجو
     const style = document.createElement('style');
     style.innerHTML = `
         #elite-ticker-container {
@@ -26,7 +26,7 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
             display: flex;
             align-items: center;
             z-index: 9999;
-            margin-top: 65px; /* المسافة اللي بتخليه يظهر تحت اللوجو والقائمة */
+            margin-top: 65px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         .ticker-content {
@@ -54,21 +54,19 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
     `;
     document.head.appendChild(style);
 
-    // 2. بناء وظيفة التشغيل
+    // 2. بناء وتشغيل الشريط وحساب الوقت
     function initTicker() {
         if (document.getElementById('elite-ticker-container')) return;
         
         const container = document.createElement('div');
         container.id = 'elite-ticker-container';
-        
-        // بيحط نفسه في أول الصفحة والـ CSS اللي فوق بيزقه تحت اللوجو
         document.body.prepend(container);
 
         const content = document.createElement('div');
         content.className = 'ticker-content';
         container.appendChild(content);
 
-        function checkTime() {
+        function updateContent() {
             const now = new Date();
             let h = now.getHours();
             let h12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
@@ -80,15 +78,13 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
             }
         }
 
-        checkTime();
-        setInterval(checkTime, 60000);
+        updateContent();
+        setInterval(updateContent, 60000); // يتأكد كل دقيقة من الوقت
     }
 
-    // 3. الربط الذاتي: الكود ده بيخلي الملف يشغل نفسه أول ما الصفحة تفتح
     if (document.readyState === 'complete') {
         initTicker();
     } else {
         window.addEventListener('load', initTicker);
     }
 })();
-
