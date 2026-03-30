@@ -4,7 +4,7 @@
 
 const الإعلان = "💎 انضم الآن إلى نخبة المجتمع المصري.. مساحات إعلانية مميزة تضع مشروعك في الصدارة 💎";
 
-const يختفي_الساعة = 999; // اكتب الساعة اللي الإعلان يختفي فيها (مثلاً 5)
+const يختفي_الساعة = 555; // كدة الإعلان ثابت للأبد ومش هيختفي لوحده
 
 const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=61587773337715"; 
 
@@ -55,6 +55,9 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
 
     // 2. بناء وتشغيل الشريط
     function initTicker() {
+        // التأكد من عدم تكرار الشريط لو الصفحة عملت لود كذا مرة
+        if (document.getElementById('elite-ticker-container')) return;
+
         const container = document.createElement('div');
         container.id = 'elite-ticker-container';
         document.body.prepend(container);
@@ -66,6 +69,7 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
         function checkTime() {
             const now = new Date();
             let h = now.getHours();
+            // نظام الـ 12 ساعة
             let h12 = h > 12 ? h - 12 : (h === 0 ? 12 : h);
 
             if (h12 < يختفي_الساعة) {
@@ -79,10 +83,10 @@ const رابط_فيسبوك = "https://www.facebook.com/profile.php?id=615877733
         setInterval(checkTime, 60000);
     }
 
+    // تشغيل الكود فوراً
     if (document.readyState === 'complete') {
         initTicker();
     } else {
         window.addEventListener('load', initTicker);
     }
 })();
-
