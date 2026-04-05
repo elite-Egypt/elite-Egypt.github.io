@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
         /* ستايل صفحة النخبة - إصدار النص مليون جنيه */
@@ -93,7 +93,7 @@
 
     <div id="viewport">
         <div id="canvas-wrapper">
-            <img src="all.webp" id="main-image" usemap="#pixelmap">
+            <img id="main-image" usemap="#pixelmap">
             
             <map name="pixelmap" id="map-links">
             </map>
@@ -101,6 +101,14 @@
     </div>
 
     <script>
+      // التعديل الثاني: تحديث الصورة أوتوماتيكياً كل ما الصفحة تفتح
+      window.onload = function() {
+          var img = document.getElementById('main-image');
+          // إضافة توقيت اللحظة لاسم الصورة عشان جيت هوب يبعت النسخة الجديدة فوراً
+          img.src = 'all.webp?v=' + Date.now();
+      };
+
+      // كود تحميل الروابط القديم زي ما هو
       var script = document.createElement('script');
       script.src = 'links.js?v=' + Date.now(); 
       document.head.appendChild(script);
