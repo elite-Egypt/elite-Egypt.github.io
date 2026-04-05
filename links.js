@@ -1,6 +1,6 @@
 // قائمة زبائن صفحة النخبة
 const clients = [
-    { coords: "", url: "", title: "الزبون رقم 1" }
+    { coords: "431,438,648,654", url: "https://www.facebook.com/profile.php?id=100042981272786", title: "الزبون رقم 1" }
 ];
 
 // المحرك الذكي - ملمسوش نهائي
