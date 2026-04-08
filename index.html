@@ -16,12 +16,12 @@
         /* الهيدر الملكي */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 20px; 
+            padding: 15px; 
             border-bottom: 3px solid #DAA520; 
             text-align: center;
         }
 
-        h1 { margin: 0; font-size: 2em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
+        h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
         
         .fb-contact {
             display: inline-flex;
@@ -30,12 +30,10 @@
             background: #DAA520;
             color: #000;
             text-decoration: none;
-            padding: 10px 25px;
+            padding: 8px 20px;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 1em;
-            margin-top: 15px;
-            transition: 0.3s;
+            margin-top: 10px;
         }
 
         /* شريط الإعلانات العريض */
@@ -44,14 +42,14 @@
             border-bottom: 1px solid #333;
             overflow: hidden; 
             white-space: nowrap; 
-            padding: 20px 0; /* عريض وفخم */
+            padding: 20px 0; /* عريض زي ما طلبت */
             width: 100%;
         }
 
         .ticker-text {
             display: inline-block; 
             padding-left: 100%;
-            animation: ticker 30s linear infinite;
+            animation: ticker 25s linear infinite;
             font-weight: bold; 
             font-size: 1.3em; 
             color: #DAA520;
@@ -62,13 +60,14 @@
             100% { transform: translateX(100%); }
         }
 
-        /* حاوية العرض - أضفنا Padding عشان نمنع القص */
+        /* حاوية العرض - الزقة الحقيقية هنا */
         #viewport {
             width: 100vw;
             background: #111;
             display: flex;
             justify-content: center;
-            padding-top: 20px; /* دي الزقة اللي هتمنع القص */
+            /* نزلنا الصورة 50 بكسل زيادة عشان نضمن إن مفيش حاجة تتقص */
+            padding-top: 50px; 
         }
 
         #canvas-wrapper {
@@ -82,7 +81,8 @@
             display: block;
             width: 1080px;
             height: 10000px;
-            border-top: 1px solid #333; /* خط فاصل بسيط */
+            /* التأكد إن الصورة بتبدأ من أول بكسل فيها */
+            object-position: top; 
         }
     </style>
 </head>
@@ -117,14 +117,10 @@
               .then(adsList => {
                   let activeAds = [];
                   const now = new Date().getTime();
-
                   adsList.forEach(ad => {
                       let expiry = new Date(ad.expiry).getTime();
-                      if (now < expiry) {
-                          activeAds.push(ad.text);
-                      }
+                      if (now < expiry) activeAds.push(ad.text);
                   });
-
                   if (activeAds.length > 0) {
                       document.getElementById('ad-content').innerText = activeAds.join("  ||  ");
                   } else {
@@ -141,4 +137,3 @@
     </script>
 </body>
 </html>
-
