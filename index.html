@@ -5,35 +5,57 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        body { margin: 0; background: #000; color: #DAA520; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        body { 
+            margin: 0; 
+            background: #000; 
+            color: #DAA520; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow-x: hidden; 
+        }
 
         /* الهيدر الملكي */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px; 
+            padding: 20px; 
             border-bottom: 3px solid #DAA520; 
             text-align: center;
-            position: sticky; top: 0; z-index: 1000;
+            /* شيلنا الـ sticky عشان م يقصش الصورة */
         }
 
-        h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
+        h1 { margin: 0; font-size: 2em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
         .fb-contact {
-            display: inline-flex; align-items: center; gap: 10px; background: #DAA520; color: #000;
-            text-decoration: none; padding: 8px 20px; border-radius: 50px; font-weight: bold; margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #DAA520;
+            color: #000;
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1em;
+            margin-top: 15px;
+            transition: 0.3s;
         }
 
-        /* شريط الإعلانات الجديد */
+        /* شريط الإعلانات العريض */
         .ticker-container {
-            background: #000; border-bottom: 1px solid #DAA520;
-            overflow: hidden; white-space: nowrap; padding: 10px 0;
-            position: sticky; top: 115px; z-index: 999;
+            background: #000; 
+            border-bottom: 1px solid #333;
+            overflow: hidden; 
+            white-space: nowrap; 
+            padding: 15px 0; /* زيادة العرض */
+            width: 100%;
         }
 
         .ticker-text {
-            display: inline-block; padding-left: 100%;
-            animation: ticker 30s linear infinite; /* سرعة الشريط */
-            font-weight: bold; font-size: 1.1em;
+            display: inline-block; 
+            padding-left: 100%;
+            animation: ticker 30s linear infinite;
+            font-weight: bold; 
+            font-size: 1.2em; /* تكبير الخط */
+            color: #DAA520;
         }
 
         @keyframes ticker {
@@ -41,9 +63,26 @@
             100% { transform: translateX(100%); }
         }
 
-        #viewport { width: 100vw; background: #111; display: flex; justify-content: center; }
-        #canvas-wrapper { position: relative; width: 1080px; height: 10000px; background-color: #000; }
-        #main-image { display: block; width: 1080px; height: 10000px; }
+        /* حاوية العرض */
+        #viewport {
+            width: 100vw;
+            background: #111;
+            display: flex;
+            justify-content: center;
+        }
+
+        #canvas-wrapper {
+            position: relative;
+            width: 1080px; 
+            height: 10000px; 
+            background-color: #000;
+        }
+
+        #main-image {
+            display: block;
+            width: 1080px;
+            height: 10000px;
+        }
     </style>
 </head>
 <body>
@@ -57,7 +96,7 @@
     </div>
 
     <div class="ticker-container" id="ticker-box">
-        <div class="ticker-text" id="ad-content">جارٍ تحميل إعلانات النخبة...</div>
+        <div class="ticker-text" id="ad-content">جارٍ تحميل أحدث عروض النخبة...</div>
     </div>
 
     <div id="viewport">
@@ -68,38 +107,39 @@
     </div>
 
     <script>
-        window.onload = function() {
-            var img = document.getElementById('main-image');
-            img.src = 'all.webp?v=' + Date.now();
+      window.onload = function() {
+          var img = document.getElementById('main-image');
+          img.src = 'all.webp?v=' + Date.now();
 
-            // كود سحب الإعلانات من الملف التاني
-            fetch('ads.json?v=' + Date.now())
-                .then(res => res.json())
-                .then(adsList => {
-                    let activeAds = [];
-                    const now = new Date().getTime();
+          // جلب الإعلانات من الملف الخارجي
+          fetch('ads.json?v=' + Date.now())
+              .then(res => res.json())
+              .then(adsList => {
+                  let activeAds = [];
+                  const now = new Date().getTime();
 
-                    adsList.forEach(ad => {
-                        let expiry = new Date(ad.expiry).getTime();
-                        if (now < expiry) {
-                            activeAds.push(ad.text);
-                        }
-                    });
+                  adsList.forEach(ad => {
+                      let expiry = new Date(ad.expiry).getTime();
+                      if (now < expiry) {
+                          activeAds.push(ad.text);
+                      }
+                  });
 
-                    if (activeAds.length > 0) {
-                        document.getElementById('ad-content').innerText = activeAds.join("  ||  ");
-                    } else {
-                        document.getElementById('ticker-box').style.display = 'none';
-                    }
-                }).catch(err => {
-                    document.getElementById('ticker-box').style.display = 'none';
-                });
-        };
+                  if (activeAds.length > 0) {
+                      document.getElementById('ad-content').innerText = activeAds.join("  ||  ");
+                  } else {
+                      document.getElementById('ticker-box').style.display = 'none';
+                  }
+              }).catch(() => {
+                  document.getElementById('ticker-box').style.display = 'none';
+              });
+      };
 
-        var script = document.createElement('script');
-        script.src = 'links.js?v=' + Date.now(); 
-        document.head.appendChild(script);
+      var script = document.createElement('script');
+      script.src = 'links.js?v=' + Date.now(); 
+      document.head.appendChild(script);
     </script>
+
 </body>
 </html>
 
