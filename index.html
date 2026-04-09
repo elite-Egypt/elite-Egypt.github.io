@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
+        /* ستايل صفحة النخبة - إصدار النص مليون جنيه */
         body { 
             margin: 0; 
             background: #000; 
@@ -13,6 +14,7 @@
             overflow-x: hidden; 
         }
 
+        /* الهيدر الملكي الثابت */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; 
@@ -21,20 +23,29 @@
             position: sticky; 
             top: 0;
             z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
+        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
+        /* زرار التواصل */
         .fb-contact {
             display: inline-flex;
-            align-items: center; gap: 10px;
-            background: #DAA520; color: #000;
-            text-decoration: none; padding: 8px 20px;
-            border-radius: 50px; font-weight: bold;
+            align-items: center;
+            gap: 10px;
+            background: #DAA520;
+            color: #000;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9em;
             margin-top: 10px;
+            transition: 0.3s;
         }
+        .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* شريط الإعلانات: الحل اللي مبيخرش مية */
+        /* --- الشريط الإخباري (كودك القديم المظبوط) --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -43,34 +54,32 @@
             position: sticky;
             top: 103px; 
             z-index: 999;
-            width: 100%;
-            /* إجبار الاتجاه لليسار عشان نتحكم في حركة الـ X */
-            direction: ltr !important;
+            display: flex;
+            align-items: center;
         }
 
         .ticker-wrapper {
-            display: inline-block;
             white-space: nowrap;
-            line-height: 45px;
+            display: inline-block;
+            padding-right: 100%;
+            animation: marquee 25s linear infinite;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            /* السر هنا: الحركة تبدأ من الموجب (يمين) للسالب (شمال) */
-            animation: marquee-final-fix 25s linear infinite;
-            /* النص يفضل يتقرأ عربي صح */
-            direction: rtl !important;
         }
 
-        @keyframes marquee-final-fix {
-            0% { transform: translateX(1080px); }   /* يبدأ من حافة الـ 1080 اليمين */
-            100% { transform: translateX(-100%); }  /* يخرج من الشمال تماماً */
+        @keyframes marquee {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
+        /* حاوية العرض */
         #viewport {
             width: 100vw;
             background: #111;
             display: flex;
             justify-content: center;
+            overflow-y: auto;
             padding-top: 20px;
         }
 
@@ -87,6 +96,11 @@
             display: block;
             width: 1080px;
             height: 10000px;
+            image-rendering: -webkit-optimize-contrast; 
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
@@ -101,7 +115,9 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper" id="ticker-content">جاري تحميل أحدث الإعلانات...</div>
+        <div class="ticker-wrapper" id="ticker-content">
+            جاري تحميل أحدث الإعلانات...
+        </div>
     </div>
 
     <div id="viewport">
@@ -112,19 +128,26 @@
     </div>
 
     <script>
+      // التعديلات الجديدة فقط في الـ JavaScript لضمان تحديث البيانات أوتوماتيكياً
       window.onload = function() {
           const v = Date.now();
-          document.getElementById('main-image').src = 'all.webp?v=' + v;
           
-          const sL = document.createElement('script');
-          sL.src = 'links.js?v=' + v;
-          document.head.appendChild(sL);
+          // تحديث الصورة بـ Cache Buster
+          const img = document.getElementById('main-image');
+          img.src = 'all.webp?v=' + v;
 
-          const sA = document.createElement('script');
-          sA.src = 'ads.js?v=' + v;
-          document.head.appendChild(sA);
+          // تحديث ملف الروابط (links.js) أوتوماتيكياً
+          const scriptLinks = document.createElement('script');
+          scriptLinks.src = 'links.js?v=' + v; 
+          document.head.appendChild(scriptLinks);
+
+          // تحديث ملف الإعلانات (ads.js) أوتوماتيكياً
+          const scriptAds = document.createElement('script');
+          scriptAds.src = 'ads.js?v=' + v;
+          document.head.appendChild(scriptAds);
       };
     </script>
+
 </body>
 </html>
 
