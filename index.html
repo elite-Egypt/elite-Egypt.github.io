@@ -42,7 +42,7 @@
             border-bottom: 1px solid #333;
             overflow: hidden; 
             white-space: nowrap; 
-            padding: 20px 0; /* عريض زي ما طلبت */
+            padding: 25px 0; /* عريض زي ما طلبت */
             width: 100%;
         }
 
@@ -51,7 +51,7 @@
             padding-left: 100%;
             animation: ticker 25s linear infinite;
             font-weight: bold; 
-            font-size: 1.3em; 
+            font-size: 1.4em; 
             color: #DAA520;
         }
 
@@ -60,14 +60,15 @@
             100% { transform: translateX(100%); }
         }
 
-        /* حاوية العرض - الزقة الحقيقية هنا */
+        /* حاوية العرض - هنا التصليح الجذري للقص */
         #viewport {
             width: 100vw;
             background: #111;
             display: flex;
             justify-content: center;
-            /* نزلنا الصورة 50 بكسل زيادة عشان نضمن إن مفيش حاجة تتقص */
-            padding-top: 50px; 
+            /* الزقة دي عشان تنزل الصورة تحت الهيدر والشريط تماماً */
+            margin-top: 10px; 
+            padding-top: 10px;
         }
 
         #canvas-wrapper {
@@ -81,8 +82,8 @@
             display: block;
             width: 1080px;
             height: 10000px;
-            /* التأكد إن الصورة بتبدأ من أول بكسل فيها */
-            object-position: top; 
+            /* عشان نضمن إن الصورة بتبدأ من أول بكسل فوق */
+            vertical-align: top;
         }
     </style>
 </head>
