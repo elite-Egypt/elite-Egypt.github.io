@@ -34,7 +34,7 @@
             margin-top: 10px;
         }
 
-        /* الحل النهائي والوحيد اللي جربته وشغال مسطرة */
+        /* شريط الإعلانات: الحل اللي مبيخرش مية */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -44,7 +44,8 @@
             top: 103px; 
             z-index: 999;
             width: 100%;
-            direction: ltr !important; /* إجبار الشريط يكون يسار ليمين تقنياً */
+            /* إجبار الاتجاه لليسار عشان نتحكم في حركة الـ X */
+            direction: ltr !important;
         }
 
         .ticker-wrapper {
@@ -54,16 +55,15 @@
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            /* سر الصنعة هنا: نستخدم right بدل translateX */
-            position: absolute;
-            right: -100%; 
-            animation: marquee-elite-fixed 30s linear infinite;
-            direction: rtl !important; /* النص يفضل عربي */
+            /* السر هنا: الحركة تبدأ من الموجب (يمين) للسالب (شمال) */
+            animation: marquee-final-fix 25s linear infinite;
+            /* النص يفضل يتقرأ عربي صح */
+            direction: rtl !important;
         }
 
-        @keyframes marquee-elite-fixed {
-            0% { right: -100%; }   /* يبدأ من اليمين خالص بره الشاشة */
-            100% { right: 100%; }  /* يخرج من الشمال خالص */
+        @keyframes marquee-final-fix {
+            0% { transform: translateX(1080px); }   /* يبدأ من حافة الـ 1080 اليمين */
+            100% { transform: translateX(-100%); }  /* يخرج من الشمال تماماً */
         }
 
         #viewport {
@@ -127,3 +127,4 @@
     </script>
 </body>
 </html>
+
