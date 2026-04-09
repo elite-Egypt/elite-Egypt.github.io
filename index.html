@@ -5,66 +5,107 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
+        /* ستايل صفحة النخبة - إصدار النص مليون جنيه */
         body { 
-            margin: 0; background: #000; color: #DAA520; 
+            margin: 0; 
+            background: #000; 
+            color: #DAA520; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             overflow-x: hidden; 
         }
 
+        /* الهيدر الملكي الثابت */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px; border-bottom: 3px solid #DAA520; 
-            text-align: center; position: sticky; top: 0; z-index: 2000;
+            padding: 15px; 
+            border-bottom: 3px solid #DAA520; 
+            text-align: center;
+            position: sticky; 
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 0; font-size: 1.8em; }
+        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
+        /* زرار التواصل */
         .fb-contact {
-            display: inline-flex; align-items: center; gap: 10px;
-            background: #DAA520; color: #000; text-decoration: none;
-            padding: 5px 15px; border-radius: 50px; font-weight: bold;
-            margin-top: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #DAA520;
+            color: #000;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: 0.3s;
         }
+        .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* شريط الإعلانات - الحل القاطع لاتجاه الحركة */
+        /* --- الشريط الإخباري (تم تعديل المشكلة هنا) --- */
         .news-ticker {
-            background: #000; border-bottom: 2px solid #DAA520;
-            height: 45px; overflow: hidden; position: sticky;
-            top: 103px; z-index: 1999; width: 100%;
-            /* إجبار الشريط يكون LTR عشان نتحكم في المسطرة بالـ Left */
-            direction: ltr !important; 
+            background: #000;
+            border-bottom: 2px solid #DAA520;
+            height: 45px;
+            overflow: hidden;
+            position: sticky;
+            top: 103px; 
+            z-index: 999;
+            display: flex;
+            align-items: center;
         }
 
         .ticker-wrapper {
-            position: absolute;
             white-space: nowrap;
-            line-height: 45px;
+            display: inline-block;
+            padding-left: 100%; /* يبدأ النص من خارج الشاشة تماماً */
+            animation: marquee 20s linear infinite; /* تحكم في السرعة من هنا */
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            /* النص يرجع عربي */
-            direction: rtl !important; 
-            /* الحركة تبدأ من أقصى اليمين (100%) وتنتهي في أقصى الشمال (-100%) */
-            animation: elite-fix 35s linear infinite;
         }
 
-        /* الحركة بالـ Left مستحيل المتصفح يعكسها */
-        @keyframes elite-fix {
-            0% { left: 100%; }
-            100% { left: -100%; }
+        @keyframes marquee {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(100%); }
         }
 
+        /* حاوية العرض */
         #viewport {
-            width: 100vw; display: flex; justify-content: center;
-            background: #111; padding-top: 10px;
+            width: 100vw;
+            background: #111;
+            display: flex;
+            justify-content: center;
+            overflow-y: auto;
+            padding-top: 20px; 
         }
 
         #canvas-wrapper {
-            position: relative; width: 1080px; height: 10000px; 
+            position: relative;
+            width: 1080px; 
+            height: 10000px; 
             background-color: #000;
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
         }
 
-        #main-image { display: block; width: 1080px; height: 10000px; }
+        #main-image {
+            display: block;
+            width: 1080px;
+            height: 10000px;
+            image-rendering: -webkit-optimize-contrast; 
+            background-image: 
+                linear-gradient(to right, #1a1a1a 1px, transparent 1px),
+                linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
+            background-size: 108px 108px;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 <body>
@@ -78,37 +119,37 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper" id="ticker-content">جاري التحميل...</div>
+        <div class="ticker-wrapper" id="ticker-content">
+            جاري تحميل أحدث الإعلانات...
+        </div>
     </div>
 
     <div id="viewport">
         <div id="canvas-wrapper">
             <img id="main-image" usemap="#pixelmap">
-            <map name="pixelmap" id="map-links"></map>
+            
+            <map name="pixelmap" id="map-links">
+            </map>
         </div>
     </div>
 
     <script>
+      // تحديث الصورة أوتوماتيكياً
       window.onload = function() {
-          const bust = Date.now();
-          
-          const mainImg = document.getElementById('main-image');
-          mainImg.src = 'all.webp?v=' + bust;
-
-          const scriptLinks = document.createElement('script');
-          scriptLinks.src = 'links.js?v=' + bust;
-          document.head.appendChild(scriptLinks);
-
-          const scriptAds = document.createElement('script');
-          scriptAds.src = 'ads.js?v=' + bust;
-          scriptAds.onload = function() {
-              if (typeof ads !== 'undefined' && ads.length > 0) {
-                  // وضع الإعلانات ورا بعض مع فاصل شيك
-                  document.getElementById('ticker-content').innerHTML = ads.join(' &nbsp;&nbsp;&nbsp;&nbsp; ★ &nbsp;&nbsp;&nbsp;&nbsp; ');
-              }
-          };
-          document.head.appendChild(scriptAds);
+          var img = document.getElementById('main-image');
+          img.src = 'all.webp?v=' + Date.now();
       };
+
+      // تحميل ملف الروابط القديم
+      var scriptLinks = document.createElement('script');
+      scriptLinks.src = 'links.js?v=' + Date.now(); 
+      document.head.appendChild(scriptLinks);
+
+      // تحميل ملف الإعلانات الجديد
+      var scriptAds = document.createElement('script');
+      scriptAds.src = 'ads.js?v=' + Date.now();
+      document.head.appendChild(scriptAds);
     </script>
+
 </body>
 </html>
