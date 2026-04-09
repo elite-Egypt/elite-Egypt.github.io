@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        /* الأساسيات اللي كانت شغالة عندك */
-        body { margin: 0; background: #000; color: #DAA520; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
+        body { margin: 0; padding: 0; background: #000; color: #DAA520; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px; border-bottom: 3px solid #DAA520; text-align: center;
+            padding: 15px 0; border-bottom: 3px solid #DAA520; text-align: center;
             position: sticky; top: 0; z-index: 1000;
         }
 
@@ -22,26 +21,24 @@
             font-weight: bold; font-size: 0.9em; margin-top: 10px;
         }
 
-        /* --- الشريط الإخباري (النسخة الأصلية المصلحة) --- */
+        /* --- حل مشكلة القص النهائي --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 50px;
+            height: 60px; /* زودنا الارتفاع هنا عشان الكلام يظهر كامل وميتقصش */
             overflow: hidden;
             position: sticky;
-            top: 103px; 
+            top: 103px; /* تأكد إن الرقم ده متوافق مع طول الهيدر */
             z-index: 999;
             width: 100%;
             display: flex;
-            align-items: center;
-            white-space: nowrap;
+            align-items: center; /* بيخلي النص في نص المستطيل بالظبط */
         }
 
         .ticker-move {
             display: inline-block;
             white-space: nowrap;
-            padding-right: 100%; /* يبدأ من اليمين تماماً */
-            /* السرعة 20 ثانية، وأول ما يخلص بيلف فوراً */
+            padding-right: 100%;
             animation: marquee 20s linear infinite; 
         }
 
@@ -51,15 +48,14 @@
             font-weight: bold;
             font-size: 1.3em;
             padding-left: 50px;
+            line-height: 60px; /* لضمان إن الحروف الطويلة متتقصش */
         }
 
-        /* الأنيميشن البسيط اللي المتصفحات كلها بتفهمه */
         @keyframes marquee {
             0%   { transform: translateX(0); }
-            100% { transform: translateX(100%); } /* بيتحرك مع اتجاه الصفحة RTL طبيعي */
+            100% { transform: translateX(100%); }
         }
 
-        /* حاوية العرض */
         #viewport { width: 100vw; background: #111; display: flex; justify-content: center; padding-top: 20px; }
         #canvas-wrapper { position: relative; width: 1080px; height: 10000px; background-color: #000; border: 1px solid #333; }
         #main-image { display: block; width: 1080px; height: 10000px; }
@@ -67,7 +63,7 @@
 </head>
 <body>
 
-    <div class="header">
+    <div class="header" id="myHeader">
         <h1>صفحة النخبة</h1>
         <a href="https://www.facebook.com/profile.php?id=61587773337715" class="fb-contact" target="_blank">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="18">
@@ -89,21 +85,29 @@
     </div>
 
     <script>
-      // دالة التحديث ومنع الكاش لضمان تحميل أحدث نسخة دائماً
-      const v = Date.now();
+      // دالة التحديث الإجباري (Force Refresh) لكل حاجة
+      const v = new Date().getTime(); // رقم فريد يتغير كل مللي ثانية
 
       window.onload = function() {
-          document.getElementById('main-image').src = 'all.webp?v=' + v;
+          // تحديث الصورة
+          const img = document.getElementById('main-image');
+          img.src = 'all.webp?v=' + v;
+
+          // ظبط مكان المستطيل أوتوماتيك عشان ميتقصش مهما كان حجم الهيدر
+          const header = document.getElementById('myHeader');
+          const ticker = document.querySelector('.news-ticker');
+          ticker.style.top = header.offsetHeight + 'px';
       };
 
-      // تحميل الروابط والإعلانات فريش
-      function load(src) {
-          var s = document.createElement('script');
+      // تحميل الروابط والإعلانات "طازة" غصب عن المتصفح
+      function forceLoad(src) {
+          const s = document.createElement('script');
           s.src = src + '?v=' + v;
           document.head.appendChild(s);
       }
-      load('links.js');
-      load('ads.js');
+      
+      forceLoad('links.js');
+      forceLoad('ads.js');
     </script>
 
 </body>
