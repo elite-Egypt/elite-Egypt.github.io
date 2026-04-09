@@ -13,7 +13,7 @@
             overflow-x: hidden; 
         }
 
-        /* الهيدر الملكي الثابت */
+        /* الهيدر الملكي */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; 
@@ -29,51 +29,42 @@
         
         .fb-contact {
             display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #DAA520;
-            color: #000;
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 0.9em;
-            margin-top: 10px;
-            transition: 0.3s;
+            align-items: center; gap: 10px;
+            background: #DAA520; color: #000;
+            text-decoration: none; padding: 8px 20px;
+            border-radius: 50px; font-weight: bold;
+            font-size: 0.9em; margin-top: 10px;
         }
-        .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* --- شريط الإعلانات المعدل 100% --- */
+        /* --- شريط الإعلانات: الإصدار الفولاذي --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
             height: 45px;
             overflow: hidden;
             position: sticky;
-            top: 103px; /* محسوب بدقة أسفل الهيدر */
+            top: 103px; 
             z-index: 999;
             display: flex;
             align-items: center;
-            /* سر الحركة هنا: تثبيت الاتجاه ltr */
-            direction: ltr; 
+            direction: ltr !important; /* إجبار الاتجاه تقنياً لمنع العك */
         }
 
         .ticker-wrapper {
             display: inline-block;
             white-space: nowrap;
-            /* النص يبدأ من أقصى يمين الشاشة */
-            padding-left: 100%; 
-            animation: marquee 30s linear infinite;
+            /* يبدأ من اليمين (خارج الشاشة) */
+            transform: translateX(1080px); 
+            animation: marquee 25s linear infinite;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            /* نرجع النص عربي */
-            direction: rtl; 
+            direction: rtl !important; /* النص نفسه يفضل عربي */
         }
 
-        /* حركة دائرية تبدأ من اليمين وتخرج من الشمال وتلف فوراً */
+        /* حركة دقيقة: من أقصى اليمين لأقصى الشمال */
         @keyframes marquee {
-            0% { transform: translateX(0); }
+            0% { transform: translateX(1080px); }
             100% { transform: translateX(-100%); }
         }
 
@@ -101,8 +92,6 @@
             height: 10000px;
             image-rendering: -webkit-optimize-contrast; 
         }
-
-        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body>
@@ -116,9 +105,7 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper" id="ticker-content">
-            جاري تحميل أحدث الإعلانات...
-        </div>
+        <div class="ticker-wrapper" id="ticker-content">جاري التحميل...</div>
     </div>
 
     <div id="viewport">
@@ -130,24 +117,17 @@
 
     <script>
       window.onload = function() {
-          const timestamp = Date.now();
-          
-          // تحديث الصورة
-          const img = document.getElementById('main-image');
-          img.src = 'all.webp?v=' + timestamp;
+          const t = Date.now();
+          document.getElementById('main-image').src = 'all.webp?v=' + t;
 
-          // تحديث الروابط
-          const scriptLinks = document.createElement('script');
-          scriptLinks.src = 'links.js?v=' + timestamp; 
-          document.head.appendChild(scriptLinks);
+          const sL = document.createElement('script');
+          sL.src = 'links.js?v=' + t;
+          document.head.appendChild(sL);
 
-          // تحديث الإعلانات
-          const scriptAds = document.createElement('script');
-          scriptAds.src = 'ads.js?v=' + timestamp;
-          document.head.appendChild(scriptAds);
+          const sA = document.createElement('script');
+          sA.src = 'ads.js?v=' + t;
+          document.head.appendChild(sA);
       };
     </script>
-
 </body>
 </html>
-
