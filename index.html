@@ -13,7 +13,7 @@
             overflow-x: hidden; 
         }
 
-        /* الهيدر */
+        /* الهيدر الملكي */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; 
@@ -22,9 +22,10 @@
             position: sticky; 
             top: 0;
             z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
+        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
         .fb-contact {
             display: inline-flex;
@@ -38,41 +39,42 @@
             font-weight: bold;
             font-size: 0.9em;
             margin-top: 10px;
+            transition: 0.3s;
         }
+        .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* --- شريط النخبة المظبوط: لا مقصوص ولا مقلوب --- */
+        /* --- حل مشكلة المستطيل المقصوص والحركة العكسية --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 50px; /* زودنا الطول عشان الكلام ميبقاش مقصوص */
+            height: 60px; /* زيادة الطول عشان الكلام ميبقاش مقصوص من فوق أو تحت */
             overflow: hidden;
             position: sticky;
-            top: 106px; /* ظبطنا مكانه تحت الهيدر بالظبط */
+            top: 107px; /* ظبط المسافة تحت الهيدر بالمللي */
             z-index: 999;
             width: 100%;
             display: flex;
             align-items: center;
-            direction: ltr; /* ده اللي بيخلي الحركة تبدأ يمين وتنتهي شمال صح */
+            direction: ltr; /* ده السر اللي بيخلي الحركة تبدأ يمين وتنتهي شمال صح */
         }
 
         .ticker-move {
             display: inline-block;
             white-space: nowrap;
-            /* هيبدأ من أقصى اليمين (بره الشاشة) */
-            padding-left: 100%; 
-            animation: marquee-elite 25s linear infinite;
+            padding-left: 100%; /* يبدأ من أقصى اليمين تماماً */
+            animation: marquee-elite 25s linear infinite; /* سرعة هادية ومريحة */
         }
 
         .ticker-item {
             display: inline-block;
             color: #DAA520;
             font-weight: bold;
-            font-size: 1.3em;
-            direction: rtl; /* نرجع العربي يتكرأ صح من اليمين للشمال */
+            font-size: 1.4em; /* تكبير الخط شوية للوضوح */
+            direction: rtl; /* ضمان قراءة اللغة العربية من اليمين للشمال */
             padding-right: 50px;
         }
 
-        /* الحركة السليمة: من 0 لـ -100% يعني من اليمين للشمال */
+        /* الأنيميشن المظبوط للحركة من اليمين لليسار */
         @keyframes marquee-elite {
             0%   { transform: translateX(0); }
             100% { transform: translateX(-100%); }
@@ -86,7 +88,7 @@
             background: #111;
             display: flex;
             justify-content: center;
-            padding-top: 20px; 
+            padding-top: 10px; 
         }
 
         #canvas-wrapper {
@@ -94,14 +96,18 @@
             width: 1080px; 
             height: 10000px; 
             background-color: #000;
-            border: 1px solid #333;
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
         }
 
         #main-image {
             display: block;
             width: 1080px;
             height: 10000px;
+            image-rendering: -webkit-optimize-contrast; 
         }
+
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body>
@@ -146,3 +152,4 @@
 
 </body>
 </html>
+
