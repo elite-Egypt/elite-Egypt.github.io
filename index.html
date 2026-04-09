@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        /* ستايل صفحة النخبة - إصدار النص مليون جنيه */
         body { 
             margin: 0; 
             background: #000; 
@@ -23,29 +22,20 @@
             position: sticky; 
             top: 0;
             z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
         h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
-        /* زرار التواصل */
         .fb-contact {
             display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #DAA520;
-            color: #000;
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 0.9em;
-            margin-top: 10px;
-            transition: 0.3s;
+            align-items: center; gap: 10px;
+            background: #DAA520; color: #000;
+            text-decoration: none; padding: 8px 20px;
+            border-radius: 50px; font-weight: bold;
+            font-size: 0.9em; margin-top: 10px;
         }
-        .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* --- الشريط الإخباري (كودك القديم المظبوط) --- */
+        /* الشريط الإخباري - الحل الذي لا يتأثر باللغة */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -54,26 +44,28 @@
             position: sticky;
             top: 103px; 
             z-index: 999;
-            display: flex;
-            align-items: center;
+            width: 100%;
+            direction: ltr !important; /* تثبيت الاتجاه برمجياً لمنع عك المتصفح */
         }
 
         .ticker-wrapper {
+            position: absolute;
             white-space: nowrap;
             display: inline-block;
-            padding-right: 100%;
-            animation: marquee 25s linear infinite;
+            line-height: 45px;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
+            /* الإعلان يبدأ من أقصى اليمين (100%) ويخرج من أقصى اليسار (-100%) */
+            animation: elite-marquee 30s linear infinite;
+            direction: rtl !important; /* النص يفضل عربي */
         }
 
-        @keyframes marquee {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        @keyframes elite-marquee {
+            0% { left: 100%; }
+            100% { left: -100%; } /* تم تغيير translateX لـ left لضمان الثبات */
         }
 
-        /* حاوية العرض */
         #viewport {
             width: 100vw;
             background: #111;
@@ -98,10 +90,6 @@
             height: 10000px;
             image-rendering: -webkit-optimize-contrast; 
         }
-
-        html {
-            scroll-behavior: smooth;
-        }
     </style>
 </head>
 <body>
@@ -115,9 +103,7 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper" id="ticker-content">
-            جاري تحميل أحدث الإعلانات...
-        </div>
+        <div class="ticker-wrapper" id="ticker-content">جاري تحميل أحدث الإعلانات...</div>
     </div>
 
     <div id="viewport">
@@ -128,26 +114,22 @@
     </div>
 
     <script>
-      // التعديلات الجديدة فقط في الـ JavaScript لضمان تحديث البيانات أوتوماتيكياً
       window.onload = function() {
           const v = Date.now();
+          // تحديث الصورة
+          document.getElementById('main-image').src = 'all.webp?v=' + v;
           
-          // تحديث الصورة بـ Cache Buster
-          const img = document.getElementById('main-image');
-          img.src = 'all.webp?v=' + v;
+          // تحديث الروابط
+          const sL = document.createElement('script');
+          sL.src = 'links.js?v=' + v;
+          document.head.appendChild(sL);
 
-          // تحديث ملف الروابط (links.js) أوتوماتيكياً
-          const scriptLinks = document.createElement('script');
-          scriptLinks.src = 'links.js?v=' + v; 
-          document.head.appendChild(scriptLinks);
-
-          // تحديث ملف الإعلانات (ads.js) أوتوماتيكياً
-          const scriptAds = document.createElement('script');
-          scriptAds.src = 'ads.js?v=' + v;
-          document.head.appendChild(scriptAds);
+          // تحديث الإعلانات
+          const sA = document.createElement('script');
+          sA.src = 'ads.js?v=' + v;
+          document.head.appendChild(sA);
       };
     </script>
-
 </body>
 </html>
 
