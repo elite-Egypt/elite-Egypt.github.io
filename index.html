@@ -5,44 +5,62 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        body { margin: 0; background: #000; color: #DAA520; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
+        body { 
+            margin: 0; 
+            background: #000; 
+            color: #DAA520; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            overflow-x: hidden; 
+        }
 
+        /* الهيدر */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px; border-bottom: 3px solid #DAA520; text-align: center;
-            position: sticky; top: 0; z-index: 1000;
+            padding: 15px; 
+            border-bottom: 3px solid #DAA520; 
+            text-align: center;
+            position: sticky; 
+            top: 0;
+            z-index: 1000;
         }
 
         h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
         
         .fb-contact {
-            display: inline-flex; align-items: center; gap: 10px; background: #DAA520;
-            color: #000; text-decoration: none; padding: 8px 20px; border-radius: 50px;
-            font-weight: bold; font-size: 0.9em; margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #DAA520;
+            color: #000;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-top: 10px;
         }
 
-        /* --- شريط النخبة: إعلان واحد بمسار احترافي --- */
+        /* --- شريط النخبة المظبوط: لا مقصوص ولا مقلوب --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 45px;
+            height: 50px; /* زودنا الطول عشان الكلام ميبقاش مقصوص */
             overflow: hidden;
             position: sticky;
-            top: 103px; 
+            top: 106px; /* ظبطنا مكانه تحت الهيدر بالظبط */
             z-index: 999;
             width: 100%;
             display: flex;
             align-items: center;
-            /* تثبيت الاتجاه لضمان عدم عكس الحركة في أي متصفح */
-            direction: ltr; 
+            direction: ltr; /* ده اللي بيخلي الحركة تبدأ يمين وتنتهي شمال صح */
         }
 
         .ticker-move {
             display: inline-block;
             white-space: nowrap;
-            /* يبدأ من اليمين (100% من عرض الشاشة) */
+            /* هيبدأ من أقصى اليمين (بره الشاشة) */
             padding-left: 100%; 
-            animation: marquee-fix 25s linear infinite;
+            animation: marquee-elite 25s linear infinite;
         }
 
         .ticker-item {
@@ -50,21 +68,40 @@
             color: #DAA520;
             font-weight: bold;
             font-size: 1.3em;
-            /* نرجع النص عربي مظبوط داخل الشريط */
-            direction: rtl; 
+            direction: rtl; /* نرجع العربي يتكرأ صح من اليمين للشمال */
             padding-right: 50px;
         }
 
-        @keyframes marquee-fix {
+        /* الحركة السليمة: من 0 لـ -100% يعني من اليمين للشمال */
+        @keyframes marquee-elite {
             0%   { transform: translateX(0); }
-            100% { transform: translateX(-100%); } /* الحركة ثابتة لليسار دائماً */
+            100% { transform: translateX(-100%); }
         }
 
         .news-ticker:hover .ticker-move { animation-play-state: paused; }
 
-        #viewport { width: 100vw; background: #111; display: flex; justify-content: center; padding-top: 20px; }
-        #canvas-wrapper { position: relative; width: 1080px; height: 10000px; background-color: #000; border: 1px solid #333; }
-        #main-image { display: block; width: 1080px; height: 10000px; }
+        /* حاوية العرض */
+        #viewport {
+            width: 100vw;
+            background: #111;
+            display: flex;
+            justify-content: center;
+            padding-top: 20px; 
+        }
+
+        #canvas-wrapper {
+            position: relative;
+            width: 1080px; 
+            height: 10000px; 
+            background-color: #000;
+            border: 1px solid #333;
+        }
+
+        #main-image {
+            display: block;
+            width: 1080px;
+            height: 10000px;
+        }
     </style>
 </head>
 <body>
@@ -79,7 +116,7 @@
 
     <div class="news-ticker">
         <div class="ticker-move">
-            <div class="ticker-item" id="ticker-content">جاري جلب الإعلانات...</div>
+            <div class="ticker-item" id="ticker-content">جاري جلب أحدث الإعلانات...</div>
         </div>
     </div>
 
@@ -91,11 +128,13 @@
     </div>
 
     <script>
+      // تحديث الصورة
       window.onload = function() {
           var img = document.getElementById('main-image');
           img.src = 'all.webp?v=' + Date.now();
       };
 
+      // تحميل الملفات الخارجية
       var scriptLinks = document.createElement('script');
       scriptLinks.src = 'links.js?v=' + Date.now();
       document.head.appendChild(scriptLinks);
@@ -107,4 +146,3 @@
 
 </body>
 </html>
-
