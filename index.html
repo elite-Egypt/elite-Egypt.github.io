@@ -16,50 +16,47 @@
         /* الهيدر الملكي */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 10px 0; 
+            padding: 15px 0; 
             border-bottom: 3px solid #DAA520; 
             text-align: center;
-            position: sticky; 
-            top: 0;
+            position: relative; /* تغيير لضمان عدم تداخل الطبقات */
             z-index: 1001;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 0; font-size: 1.6em; color: #DAA520; }
+        h1 { margin: 0; font-size: 2em; color: #DAA520; text-shadow: 2px 2px 5px #000; }
         
         .fb-contact {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             background: #DAA520;
             color: #000;
             text-decoration: none;
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 0.8em;
-            margin-top: 5px;
+            font-size: 0.9em;
+            margin-top: 10px;
         }
 
-        /* --- حل مشكلة الشريط المقصوص والاتجاه --- */
+        /* --- الحل الجذري للشريط الإخباري --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 40px; /* طول مناسب جداً */
+            height: 50px; /* طول كافي لمنع القص */
             overflow: hidden;
-            position: sticky;
-            top: 90px; /* ظبطنا مكانه بالضبط تحت الهيدر */
-            z-index: 1000;
             width: 100%;
             display: flex;
             align-items: center;
-            direction: ltr; /* إجبار الحركة تبدأ يمين وتنتهي شمال */
+            position: relative;
+            z-index: 1000;
+            direction: ltr; /* إجبار المحرك على التحرك لليسار دائماً */
         }
 
         .ticker-move {
             display: inline-block;
             white-space: nowrap;
-            padding-left: 100%; 
+            padding-left: 100%; /* يبدأ من أقصى اليمين بره الشاشة */
             animation: marquee-elite 20s linear infinite;
         }
 
@@ -67,12 +64,12 @@
             display: inline-block;
             color: #DAA520;
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1.3em;
             direction: rtl; /* النص عربي سليم */
-            padding-right: 30px;
+            padding-right: 50px;
         }
 
-        /* اتجاه الحركة من اليمين للشمال */
+        /* الأنيميشن المظبوط للحركة لليسار */
         @keyframes marquee-elite {
             0%   { transform: translateX(0); }
             100% { transform: translateX(-100%); }
@@ -84,75 +81,39 @@
             background: #111;
             display: flex;
             justify-content: center;
-            padding-top: 5px; 
+            padding-top: 10px;
         }
 
         #canvas-wrapper {
             position: relative;
             width: 1080px; 
-            height: 10000px; 
             background-color: #000;
         }
 
         #main-image {
             display: block;
             width: 1080px;
-            height: 10000px;
-            image-rendering: auto; 
+            height: auto;
+            min-height: 5000px; /* لضمان ظهور المساحة السوداء قبل تحميل الصورة */
         }
     </style>
 </head>
 <body>
 
-    <div class="header" id="main-header">
+    <div class="header">
         <h1>صفحة النخبة</h1>
         <a href="https://www.facebook.com/profile.php?id=61587773337715" class="fb-contact" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="16">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="18">
             تواصل معنا عبر فيسبوك
         </a>
     </div>
 
     <div class="news-ticker">
         <div class="ticker-move">
-            <div class="ticker-item" id="ticker-content">جاري التحميل...</div>
+            <div class="ticker-item" id="ticker-content">جاري تحميل أحدث الإعلانات...</div>
         </div>
     </div>
 
     <div id="viewport">
         <div id="canvas-wrapper">
-            <img id="main-image" usemap="#pixelmap">
-            <map name="pixelmap" id="map-links"></map>
-        </div>
-    </div>
-
-    <script>
-      // دالة لتوليد رقم عشوائي لمنع المتصفح من حفظ الـ Cache القديم
-      const cacheBuster = Date.now();
-
-      // 1. تحديث الصورة أوتوماتيكياً
-      window.onload = function() {
-          const img = document.getElementById('main-image');
-          img.src = 'all.webp?v=' + cacheBuster;
-          
-          // ظبط مكان التيكر ديناميكياً بناءً على حجم الهيدر الحقيقي
-          const headerHeight = document.getElementById('main-header').offsetHeight;
-          document.querySelector('.news-ticker').style.top = headerHeight + 'px';
-      };
-
-      // 2. تحميل الملفات (روابط وإعلانات) بنسخة جديدة دائماً
-      function refreshData(src) {
-          const script = document.createElement('script');
-          script.src = src + '?v=' + cacheBuster;
-          document.head.appendChild(script);
-      }
-
-      refreshData('links.js');
-      refreshData('ads.js');
-
-      // إجبار الصفحة على التحديث لو قعدت مفتوحة فترة طويلة (اختياري)
-      // setInterval(() => { location.reload(); }, 300000); // كل 5 دقائق
-    </script>
-
-</body>
-</html>
 
