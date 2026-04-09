@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        /* الأساسيات */
         body { 
             margin: 0; 
             background: #000; 
@@ -14,7 +13,6 @@
             overflow-x: hidden; 
         }
 
-        /* الهيدر */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; 
@@ -41,7 +39,7 @@
             margin-top: 10px;
         }
 
-        /* --- الشريط الإخباري العالمي (حل نهائي) --- */
+        /* --- شريط أخبار "قنوات" احترافي --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -52,40 +50,33 @@
             z-index: 999;
             width: 100%;
             display: flex;
-        }
-
-        .ticker-wrap {
-            display: flex;
-            width: 100%;
-            overflow: hidden;
+            direction: ltr; /* لضمان انسيابية الحركة من اليمين لليسار */
         }
 
         .ticker-move {
             display: flex;
             white-space: nowrap;
-            animation: marquee-final 30s linear infinite; /* السرعة هنا */
+            /* السرعة 15 ثانية هي سرعة قنوات الأخبار القياسية */
+            animation: marquee-tv 15s linear infinite;
         }
 
         .ticker-item {
             flex-shrink: 0;
-            padding-left: 100px; /* المسافة بين تكرار النص */
+            padding-right: 100px; /* المسافة بين نهاية الشريط وبداية تكراره */
             display: flex;
             align-items: center;
             color: #DAA520;
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.25em;
+            direction: rtl; /* النص يقرأ عربي مظبوط */
         }
 
-        /* الحركة دي بتخلي النص يلف ويرجع مكانه في كسر من الثانية */
-        @keyframes marquee-final {
+        @keyframes marquee-tv {
             0% { transform: translateX(0); }
             100% { transform: translateX(50%); } 
         }
 
-        /* إيقاف الحركة عند الماوس للقراءة */
-        .ticker-move:hover { animation-play-state: paused; }
-
-        /* حاوية الصور */
+        /* حاوية العرض */
         #viewport {
             width: 100vw;
             background: #111;
@@ -120,11 +111,9 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrap">
-            <div class="ticker-move" id="ticker-move">
-                <div class="ticker-item" id="content1">جاري تحميل أحدث الإعلانات... • ترقبوا عروض النخبة •</div>
-                <div class="ticker-item" id="content2">جاري تحميل أحدث الإعلانات... • ترقبوا عروض النخبة •</div>
-            </div>
+        <div class="ticker-move" id="ticker-master">
+            <div class="ticker-item" id="ticker-content">جاري جلب البيانات...</div>
+            <div class="ticker-item" id="ticker-clone">جاري جلب البيانات...</div>
         </div>
     </div>
 
@@ -136,32 +125,30 @@
     </div>
 
     <script>
-      // 1. تحديث الصورة فوراً
+      // 1. تحديث الصورة
       window.onload = function() {
           var img = document.getElementById('main-image');
           img.src = 'all.webp?v=' + Date.now();
       };
 
-      // 2. سحب الروابط والإعلانات
-      function loadExternal() {
-          var s1 = document.createElement('script');
-          s1.src = 'links.js?v=' + Date.now();
-          document.head.appendChild(s1);
+      // 2. تحميل ملفاتك الخارجية
+      var scriptLinks = document.createElement('script');
+      scriptLinks.src = 'links.js?v=' + Date.now();
+      document.head.appendChild(scriptLinks);
 
-          var s2 = document.createElement('script');
-          s2.src = 'ads.js?v=' + Date.now();
-          s2.onload = function() {
-              // حركة ذكية: بنحدث النسخة المكررة عشان الـ Loop يكمل
-              setTimeout(() => {
-                  const txt = document.getElementById('content1').innerHTML;
-                  document.getElementById('content2').innerHTML = txt;
-              }, 600);
-          };
-          document.head.appendChild(s2);
-      }
+      var scriptAds = document.createElement('script');
+      scriptAds.src = 'ads.js?v=' + Date.now();
       
-      loadExternal();
+      // التعديل البرمجي: بمجرد ما ads.js يغير محتوى ticker-content، إحنا بننسخه للـ Clone
+      scriptAds.onload = function() {
+          setTimeout(() => {
+              const original = document.getElementById('ticker-content').innerHTML;
+              document.getElementById('ticker-clone').innerHTML = original;
+          }, 500); 
+      };
+      document.head.appendChild(scriptAds);
     </script>
 
 </body>
 </html>
+
