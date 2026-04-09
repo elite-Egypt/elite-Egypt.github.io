@@ -5,41 +5,23 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        body { 
-            margin: 0; 
-            background: #000; 
-            color: #DAA520; 
-            font-family: 'Segoe UI', Tahoma, sans-serif; 
-            overflow-x: hidden; 
-        }
+        body { margin: 0; background: #000; color: #DAA520; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px; 
-            border-bottom: 3px solid #DAA520; 
-            text-align: center;
-            position: sticky; 
-            top: 0;
-            z-index: 1000;
+            padding: 15px; border-bottom: 3px solid #DAA520; text-align: center;
+            position: sticky; top: 0; z-index: 1000;
         }
 
         h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
         
         .fb-contact {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #DAA520;
-            color: #000;
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 0.9em;
-            margin-top: 10px;
+            display: inline-flex; align-items: center; gap: 10px; background: #DAA520;
+            color: #000; text-decoration: none; padding: 8px 20px; border-radius: 50px;
+            font-weight: bold; font-size: 0.9em; margin-top: 10px;
         }
 
-        /* --- شريط أخبار "قنوات" احترافي --- */
+        /* --- شريط النخبة الاحترافي --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -50,54 +32,36 @@
             z-index: 999;
             width: 100%;
             display: flex;
-            direction: ltr; /* لضمان انسيابية الحركة من اليمين لليسار */
+            direction: ltr; /* الحركة بتتحسب من اليسار لليمين برمجياً لضمان السلاسة */
         }
 
         .ticker-move {
             display: flex;
             white-space: nowrap;
-            /* السرعة 15 ثانية هي سرعة قنوات الأخبار القياسية */
-            animation: marquee-tv 15s linear infinite;
+            /* السرعة 20 ثانية موزونة جداً، لو عاوز أسرع قلل الرقم */
+            animation: marquee-tv 20s linear infinite;
         }
 
         .ticker-item {
             flex-shrink: 0;
-            padding-right: 100px; /* المسافة بين نهاية الشريط وبداية تكراره */
+            padding-left: 100px; /* مسافة بين نهاية النص وبداية تكراره */
             display: flex;
             align-items: center;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.25em;
-            direction: rtl; /* النص يقرأ عربي مظبوط */
+            direction: rtl; /* النص نفسه عربي */
         }
 
+        /* التعديل الجوهري هنا لضمان Loop بدون أي قفزة */
         @keyframes marquee-tv {
             0% { transform: translateX(0); }
-            100% { transform: translateX(50%); } 
+            100% { transform: translateX(-50%); } 
         }
 
-        /* حاوية العرض */
-        #viewport {
-            width: 100vw;
-            background: #111;
-            display: flex;
-            justify-content: center;
-            padding-top: 20px; 
-        }
-
-        #canvas-wrapper {
-            position: relative;
-            width: 1080px; 
-            height: 10000px; 
-            background-color: #000;
-            border: 1px solid #333;
-        }
-
-        #main-image {
-            display: block;
-            width: 1080px;
-            height: 10000px;
-        }
+        #viewport { width: 100vw; background: #111; display: flex; justify-content: center; padding-top: 20px; }
+        #canvas-wrapper { position: relative; width: 1080px; height: 10000px; background-color: #000; border: 1px solid #333; }
+        #main-image { display: block; width: 1080px; height: 10000px; }
     </style>
 </head>
 <body>
@@ -112,8 +76,8 @@
 
     <div class="news-ticker">
         <div class="ticker-move" id="ticker-master">
-            <div class="ticker-item" id="ticker-content">جاري جلب البيانات...</div>
-            <div class="ticker-item" id="ticker-clone">جاري جلب البيانات...</div>
+            <div class="ticker-item" id="ticker-content">جاري التحميل...</div>
+            <div class="ticker-item" id="ticker-clone">جاري التحميل...</div>
         </div>
     </div>
 
@@ -125,13 +89,13 @@
     </div>
 
     <script>
-      // 1. تحديث الصورة
+      // تحديث الصورة
       window.onload = function() {
           var img = document.getElementById('main-image');
           img.src = 'all.webp?v=' + Date.now();
       };
 
-      // 2. تحميل ملفاتك الخارجية
+      // تحميل الملفات الخارجية
       var scriptLinks = document.createElement('script');
       scriptLinks.src = 'links.js?v=' + Date.now();
       document.head.appendChild(scriptLinks);
@@ -139,8 +103,8 @@
       var scriptAds = document.createElement('script');
       scriptAds.src = 'ads.js?v=' + Date.now();
       
-      // التعديل البرمجي: بمجرد ما ads.js يغير محتوى ticker-content، إحنا بننسخه للـ Clone
       scriptAds.onload = function() {
+          // مزامنة النص الأصلي مع النسخة التوأم فور التحميل
           setTimeout(() => {
               const original = document.getElementById('ticker-content').innerHTML;
               document.getElementById('ticker-clone').innerHTML = original;
