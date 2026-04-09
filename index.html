@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
+        /* الأساسيات */
         body { 
             margin: 0; 
             background: #000; 
             color: #DAA520; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
             overflow-x: hidden; 
         }
 
+        /* الهيدر */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; 
@@ -21,10 +23,9 @@
             position: sticky; 
             top: 0;
             z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
+        h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
         
         .fb-contact {
             display: inline-flex;
@@ -38,58 +39,58 @@
             font-weight: bold;
             font-size: 0.9em;
             margin-top: 10px;
-            transition: 0.3s;
         }
-        .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* --- تطوير الشريط الإخباري ليكون دائرياً بدون توقف --- */
+        /* --- الشريط الإخباري العالمي (حل نهائي) --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 50px;
+            height: 45px;
             overflow: hidden;
             position: sticky;
             top: 103px; 
             z-index: 999;
+            width: 100%;
             display: flex;
-            align-items: center;
-            direction: ltr; /* التغليف يسار لضمان حركة الـ Loop */
         }
 
-        .ticker-wrapper {
+        .ticker-wrap {
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .ticker-move {
             display: flex;
             white-space: nowrap;
-            padding-right: 50px; /* مسافة أمان قبل تكرار الدورة */
-            animation: marquee-infinite 30s linear infinite; /* سرعة انسيابية */
+            animation: marquee-final 30s linear infinite; /* السرعة هنا */
         }
 
-        .ticker-wrapper:hover {
-            animation-play-state: paused; /* يقف عند وضع الماوس عليه لسهولة القراءة */
-        }
-
-        /* تنسيق الإعلانات داخل الشريط */
-        #ticker-content {
-            display: flex;
+        .ticker-item {
             flex-shrink: 0;
-            gap: 50px; /* مسافة بين كل إعلان والتاني */
+            padding-left: 100px; /* المسافة بين تكرار النص */
+            display: flex;
+            align-items: center;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            direction: rtl; /* النصوص من اليمين لليسار */
         }
 
-        @keyframes marquee-infinite {
+        /* الحركة دي بتخلي النص يلف ويرجع مكانه في كسر من الثانية */
+        @keyframes marquee-final {
             0% { transform: translateX(0); }
-            100% { transform: translateX(100%); }
+            100% { transform: translateX(50%); } 
         }
 
-        /* حاوية العرض */
+        /* إيقاف الحركة عند الماوس للقراءة */
+        .ticker-move:hover { animation-play-state: paused; }
+
+        /* حاوية الصور */
         #viewport {
             width: 100vw;
             background: #111;
             display: flex;
             justify-content: center;
-            overflow-y: auto;
             padding-top: 20px; 
         }
 
@@ -98,23 +99,13 @@
             width: 1080px; 
             height: 10000px; 
             background-color: #000;
-            border-left: 1px solid #333;
-            border-right: 1px solid #333;
+            border: 1px solid #333;
         }
 
         #main-image {
             display: block;
             width: 1080px;
             height: 10000px;
-            image-rendering: -webkit-optimize-contrast; 
-            background-image: 
-                linear-gradient(to right, #1a1a1a 1px, transparent 1px),
-                linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
-            background-size: 108px 108px;
-        }
-
-        html {
-            scroll-behavior: smooth;
         }
     </style>
 </head>
@@ -129,9 +120,10 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper">
-            <div id="ticker-content">
-                جاري تحميل أحدث الإعلانات والفرص الحصرية... • ترقبوا عروض النخبة القادمة • انضموا إلينا الآن عبر فيسبوك
+        <div class="ticker-wrap">
+            <div class="ticker-move" id="ticker-move">
+                <div class="ticker-item" id="content1">جاري تحميل أحدث الإعلانات... • ترقبوا عروض النخبة •</div>
+                <div class="ticker-item" id="content2">جاري تحميل أحدث الإعلانات... • ترقبوا عروض النخبة •</div>
             </div>
         </div>
     </div>
@@ -144,31 +136,32 @@
     </div>
 
     <script>
-      // تحديث الصورة أوتوماتيكياً لضمان عدم وجود Cache
+      // 1. تحديث الصورة فوراً
       window.onload = function() {
           var img = document.getElementById('main-image');
           img.src = 'all.webp?v=' + Date.now();
       };
 
-      // تحميل الملفات الخارجية
-      function loadScript(src) {
-          var script = document.createElement('script');
-          script.src = src + '?v=' + Date.now();
-          document.head.appendChild(script);
+      // 2. سحب الروابط والإعلانات
+      function loadExternal() {
+          var s1 = document.createElement('script');
+          s1.src = 'links.js?v=' + Date.now();
+          document.head.appendChild(s1);
+
+          var s2 = document.createElement('script');
+          s2.src = 'ads.js?v=' + Date.now();
+          s2.onload = function() {
+              // حركة ذكية: بنحدث النسخة المكررة عشان الـ Loop يكمل
+              setTimeout(() => {
+                  const txt = document.getElementById('content1').innerHTML;
+                  document.getElementById('content2').innerHTML = txt;
+              }, 600);
+          };
+          document.head.appendChild(s2);
       }
-
-      loadScript('links.js');
-      loadScript('ads.js');
-
-      // ميزة ذكية: لو الإعلانات في ads.js كتير، الكود هيضاعف النص عشان يملأ الفراغ
-      setTimeout(() => {
-          const content = document.getElementById('ticker-content');
-          if (content.innerText.length < 200) {
-              content.innerHTML += ' • ' + content.innerHTML; 
-          }
-      }, 1000);
+      
+      loadExternal();
     </script>
 
 </body>
 </html>
-
