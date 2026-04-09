@@ -5,85 +5,55 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        body { 
-            margin: 0; 
-            background: #000; 
-            color: #DAA520; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            overflow-x: hidden; 
-        }
+        body { margin: 0; background: #000; color: #DAA520; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
 
         /* الهيدر الملكي */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px; 
+            padding: 20px; 
             border-bottom: 3px solid #DAA520; 
             text-align: center;
         }
-
-        h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
-        
+        h1 { margin: 0; font-size: 2em; color: #DAA520; }
         .fb-contact {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #DAA520;
-            color: #000;
-            text-decoration: none;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: bold;
-            margin-top: 10px;
+            display: inline-flex; align-items: center; gap: 10px; background: #DAA520; color: #000;
+            text-decoration: none; padding: 10px 25px; border-radius: 50px; font-weight: bold; margin-top: 15px;
         }
 
-        /* شريط الإعلانات العريض */
+        /* شريط الإعلانات العريض جداً */
         .ticker-container {
-            background: #000; 
-            border-bottom: 1px solid #333;
-            overflow: hidden; 
-            white-space: nowrap; 
-            padding: 25px 0; /* عريض زي ما طلبت */
+            background: #000; border-bottom: 2px solid #333;
+            overflow: hidden; white-space: nowrap; 
+            padding: 30px 0; /* عرضناه زيادة */
             width: 100%;
         }
-
         .ticker-text {
-            display: inline-block; 
-            padding-left: 100%;
-            animation: ticker 25s linear infinite;
-            font-weight: bold; 
-            font-size: 1.4em; 
-            color: #DAA520;
+            display: inline-block; padding-left: 100%;
+            animation: ticker 30s linear infinite;
+            font-weight: bold; font-size: 1.5em; color: #DAA520;
         }
-
         @keyframes ticker {
             0% { transform: translateX(0); }
             100% { transform: translateX(100%); }
         }
 
-        /* حاوية العرض - هنا التصليح الجذري للقص */
+        /* التصليح هنا: لغينا الفليكس عشان الصورة تبدأ بكرامتها */
         #viewport {
-            width: 100vw;
+            width: 100%;
             background: #111;
-            display: flex;
-            justify-content: center;
-            /* الزقة دي عشان تنزل الصورة تحت الهيدر والشريط تماماً */
-            margin-top: 10px; 
-            padding-top: 10px;
+            text-align: center; /* توسيط الحاوية */
         }
-
         #canvas-wrapper {
             position: relative;
             width: 1080px; 
-            height: 10000px; 
-            background-color: #000;
+            margin: 0 auto; /* توسيط الصورة */
+            height: auto;
+            display: block;
         }
-
         #main-image {
             display: block;
             width: 1080px;
             height: 10000px;
-            /* عشان نضمن إن الصورة بتبدأ من أول بكسل فوق */
-            vertical-align: top;
         }
     </style>
 </head>
@@ -98,7 +68,7 @@
     </div>
 
     <div class="ticker-container" id="ticker-box">
-        <div class="ticker-text" id="ad-content">جارٍ تحميل أحدث عروض النخبة...</div>
+        <div class="ticker-text" id="ad-content">جارٍ تحميل إعلانات النخبة...</div>
     </div>
 
     <div id="viewport">
@@ -117,7 +87,7 @@
               .then(res => res.json())
               .then(adsList => {
                   let activeAds = [];
-                  const now = new Date().getTime();
+                  let now = new Date().getTime();
                   adsList.forEach(ad => {
                       let expiry = new Date(ad.expiry).getTime();
                       if (now < expiry) activeAds.push(ad.text);
@@ -127,14 +97,12 @@
                   } else {
                       document.getElementById('ticker-box').style.display = 'none';
                   }
-              }).catch(() => {
-                  document.getElementById('ticker-box').style.display = 'none';
-              });
+              }).catch(() => { document.getElementById('ticker-box').style.display = 'none'; });
       };
-
       var script = document.createElement('script');
       script.src = 'links.js?v=' + Date.now(); 
       document.head.appendChild(script);
     </script>
 </body>
 </html>
+
