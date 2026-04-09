@@ -22,7 +22,7 @@
             position: sticky; 
             top: 0;
             z-index: 1001;
-            height: auto;
+            width: 100%;
         }
 
         h1 { margin: 5px 0; font-size: 1.8em; color: #DAA520; }
@@ -41,33 +41,35 @@
             margin-bottom: 5px;
         }
 
-        /* شريط الإعلانات - تصليح المسار */
+        /* شريط الإعلانات - الحل النهائي للحركة */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
             height: 40px;
             overflow: hidden;
             position: sticky;
-            top: 90px; /* مكان ثابت أسفل الهيدر */
+            top: 93px; /* محسوب بدقة أسفل الهيدر */
             z-index: 1000;
             width: 100%;
+            direction: ltr; /* هنشغله LTR داخلياً عشان نتحكم في الحركة صح */
         }
 
         .ticker-wrapper {
             display: inline-block;
             white-space: nowrap;
-            padding-right: 100%; /* الفراغ يبدأ من اليمين */
+            padding-right: 100%;
             animation: marquee 20s linear infinite;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
             line-height: 40px;
+            direction: rtl; /* نرجع النص عربي جوه الشريط */
         }
 
-        /* حركة دائرية صحيحة 100% */
+        /* الحركة الصامتة من اليمين لليسار بدون فراغات عشوائية */
         @keyframes marquee {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         #viewport {
@@ -83,6 +85,8 @@
             width: 1080px; 
             height: 10000px; 
             background-color: #000;
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
         }
 
         #main-image {
@@ -104,7 +108,7 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper" id="ticker-content">جاري تحميل الإعلانات...</div>
+        <div class="ticker-wrapper" id="ticker-content">جاري التحميل...</div>
     </div>
 
     <div id="viewport">
@@ -129,7 +133,5 @@
           document.head.appendChild(scriptAds);
       };
     </script>
-
 </body>
 </html>
-
