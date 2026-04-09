@@ -21,7 +21,7 @@
             font-weight: bold; font-size: 0.9em; margin-top: 10px;
         }
 
-        /* --- شريط النخبة الاحترافي --- */
+        /* --- شريط النخبة: إعلان واحد بمسار كامل --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -32,32 +32,31 @@
             z-index: 999;
             width: 100%;
             display: flex;
-            direction: ltr; /* الحركة بتتحسب من اليسار لليمين برمجياً لضمان السلاسة */
+            align-items: center;
         }
 
         .ticker-move {
-            display: flex;
+            display: inline-block;
             white-space: nowrap;
-            /* السرعة 20 ثانية موزونة جداً، لو عاوز أسرع قلل الرقم */
-            animation: marquee-tv 20s linear infinite;
+            padding-left: 100%; /* بيخلي الإعلان يبدأ من بره الشاشة تماماً على اليمين */
+            animation: marquee-simple 20s linear infinite; /* سرعة القنوات */
         }
 
         .ticker-item {
-            flex-shrink: 0;
-            padding-left: 100px; /* مسافة بين نهاية النص وبداية تكراره */
-            display: flex;
-            align-items: center;
+            display: inline-block;
             color: #DAA520;
             font-weight: bold;
-            font-size: 1.25em;
-            direction: rtl; /* النص نفسه عربي */
+            font-size: 1.3em;
+            padding-right: 50px;
         }
 
-        /* التعديل الجوهري هنا لضمان Loop بدون أي قفزة */
-        @keyframes marquee-tv {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); } 
+        @keyframes marquee-simple {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-100%); } /* بيتحرك لحد ما يختفي تماماً من الشمال ويرجع فوراً */
         }
+
+        /* لو وقفت بالماوس يثبت عشان تعرف تقرأ */
+        .news-ticker:hover .ticker-move { animation-play-state: paused; }
 
         #viewport { width: 100vw; background: #111; display: flex; justify-content: center; padding-top: 20px; }
         #canvas-wrapper { position: relative; width: 1080px; height: 10000px; background-color: #000; border: 1px solid #333; }
@@ -75,9 +74,8 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-move" id="ticker-master">
-            <div class="ticker-item" id="ticker-content">جاري التحميل...</div>
-            <div class="ticker-item" id="ticker-clone">جاري التحميل...</div>
+        <div class="ticker-move">
+            <div class="ticker-item" id="ticker-content">جاري جلب آخر الإعلانات...</div>
         </div>
     </div>
 
@@ -89,27 +87,17 @@
     </div>
 
     <script>
-      // تحديث الصورة
       window.onload = function() {
           var img = document.getElementById('main-image');
           img.src = 'all.webp?v=' + Date.now();
       };
 
-      // تحميل الملفات الخارجية
       var scriptLinks = document.createElement('script');
       scriptLinks.src = 'links.js?v=' + Date.now();
       document.head.appendChild(scriptLinks);
 
       var scriptAds = document.createElement('script');
       scriptAds.src = 'ads.js?v=' + Date.now();
-      
-      scriptAds.onload = function() {
-          // مزامنة النص الأصلي مع النسخة التوأم فور التحميل
-          setTimeout(() => {
-              const original = document.getElementById('ticker-content').innerHTML;
-              document.getElementById('ticker-clone').innerHTML = original;
-          }, 500); 
-      };
       document.head.appendChild(scriptAds);
     </script>
 
