@@ -16,71 +16,67 @@
         /* الهيدر الملكي */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px; 
+            padding: 10px 0; 
             border-bottom: 3px solid #DAA520; 
             text-align: center;
             position: sticky; 
             top: 0;
-            z-index: 1000;
+            z-index: 1001;
             box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
+        h1 { margin: 0; font-size: 1.6em; color: #DAA520; }
         
         .fb-contact {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: #DAA520;
             color: #000;
             text-decoration: none;
-            padding: 8px 20px;
+            padding: 5px 15px;
             border-radius: 50px;
             font-weight: bold;
-            font-size: 0.9em;
-            margin-top: 10px;
-            transition: 0.3s;
+            font-size: 0.8em;
+            margin-top: 5px;
         }
-        .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* --- حل مشكلة المستطيل المقصوص والحركة العكسية --- */
+        /* --- حل مشكلة الشريط المقصوص والاتجاه --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 60px; /* زيادة الطول عشان الكلام ميبقاش مقصوص من فوق أو تحت */
+            height: 40px; /* طول مناسب جداً */
             overflow: hidden;
             position: sticky;
-            top: 107px; /* ظبط المسافة تحت الهيدر بالمللي */
-            z-index: 999;
+            top: 90px; /* ظبطنا مكانه بالضبط تحت الهيدر */
+            z-index: 1000;
             width: 100%;
             display: flex;
             align-items: center;
-            direction: ltr; /* ده السر اللي بيخلي الحركة تبدأ يمين وتنتهي شمال صح */
+            direction: ltr; /* إجبار الحركة تبدأ يمين وتنتهي شمال */
         }
 
         .ticker-move {
             display: inline-block;
             white-space: nowrap;
-            padding-left: 100%; /* يبدأ من أقصى اليمين تماماً */
-            animation: marquee-elite 25s linear infinite; /* سرعة هادية ومريحة */
+            padding-left: 100%; 
+            animation: marquee-elite 20s linear infinite;
         }
 
         .ticker-item {
             display: inline-block;
             color: #DAA520;
             font-weight: bold;
-            font-size: 1.4em; /* تكبير الخط شوية للوضوح */
-            direction: rtl; /* ضمان قراءة اللغة العربية من اليمين للشمال */
-            padding-right: 50px;
+            font-size: 1.1em;
+            direction: rtl; /* النص عربي سليم */
+            padding-right: 30px;
         }
 
-        /* الأنيميشن المظبوط للحركة من اليمين لليسار */
+        /* اتجاه الحركة من اليمين للشمال */
         @keyframes marquee-elite {
             0%   { transform: translateX(0); }
             100% { transform: translateX(-100%); }
         }
-
-        .news-ticker:hover .ticker-move { animation-play-state: paused; }
 
         /* حاوية العرض */
         #viewport {
@@ -88,7 +84,7 @@
             background: #111;
             display: flex;
             justify-content: center;
-            padding-top: 10px; 
+            padding-top: 5px; 
         }
 
         #canvas-wrapper {
@@ -96,33 +92,29 @@
             width: 1080px; 
             height: 10000px; 
             background-color: #000;
-            border-left: 1px solid #333;
-            border-right: 1px solid #333;
         }
 
         #main-image {
             display: block;
             width: 1080px;
             height: 10000px;
-            image-rendering: -webkit-optimize-contrast; 
+            image-rendering: auto; 
         }
-
-        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body>
 
-    <div class="header">
+    <div class="header" id="main-header">
         <h1>صفحة النخبة</h1>
         <a href="https://www.facebook.com/profile.php?id=61587773337715" class="fb-contact" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="18">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="16">
             تواصل معنا عبر فيسبوك
         </a>
     </div>
 
     <div class="news-ticker">
         <div class="ticker-move">
-            <div class="ticker-item" id="ticker-content">جاري جلب أحدث الإعلانات...</div>
+            <div class="ticker-item" id="ticker-content">جاري التحميل...</div>
         </div>
     </div>
 
@@ -134,20 +126,31 @@
     </div>
 
     <script>
-      // تحديث الصورة
+      // دالة لتوليد رقم عشوائي لمنع المتصفح من حفظ الـ Cache القديم
+      const cacheBuster = Date.now();
+
+      // 1. تحديث الصورة أوتوماتيكياً
       window.onload = function() {
-          var img = document.getElementById('main-image');
-          img.src = 'all.webp?v=' + Date.now();
+          const img = document.getElementById('main-image');
+          img.src = 'all.webp?v=' + cacheBuster;
+          
+          // ظبط مكان التيكر ديناميكياً بناءً على حجم الهيدر الحقيقي
+          const headerHeight = document.getElementById('main-header').offsetHeight;
+          document.querySelector('.news-ticker').style.top = headerHeight + 'px';
       };
 
-      // تحميل الملفات الخارجية
-      var scriptLinks = document.createElement('script');
-      scriptLinks.src = 'links.js?v=' + Date.now();
-      document.head.appendChild(scriptLinks);
+      // 2. تحميل الملفات (روابط وإعلانات) بنسخة جديدة دائماً
+      function refreshData(src) {
+          const script = document.createElement('script');
+          script.src = src + '?v=' + cacheBuster;
+          document.head.appendChild(script);
+      }
 
-      var scriptAds = document.createElement('script');
-      scriptAds.src = 'ads.js?v=' + Date.now();
-      document.head.appendChild(scriptAds);
+      refreshData('links.js');
+      refreshData('ads.js');
+
+      // إجبار الصفحة على التحديث لو قعدت مفتوحة فترة طويلة (اختياري)
+      // setInterval(() => { location.reload(); }, 300000); // كل 5 دقائق
     </script>
 
 </body>
