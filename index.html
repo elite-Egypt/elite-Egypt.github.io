@@ -21,7 +21,7 @@
             font-weight: bold; font-size: 0.9em; margin-top: 10px;
         }
 
-        /* --- شريط النخبة: إعلان واحد بمسار كامل --- */
+        /* --- شريط النخبة: إعلان واحد بمسار احترافي --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -33,13 +33,16 @@
             width: 100%;
             display: flex;
             align-items: center;
+            /* تثبيت الاتجاه لضمان عدم عكس الحركة في أي متصفح */
+            direction: ltr; 
         }
 
         .ticker-move {
             display: inline-block;
             white-space: nowrap;
-            padding-left: 100%; /* بيخلي الإعلان يبدأ من بره الشاشة تماماً على اليمين */
-            animation: marquee-simple 20s linear infinite; /* سرعة القنوات */
+            /* يبدأ من اليمين (100% من عرض الشاشة) */
+            padding-left: 100%; 
+            animation: marquee-fix 25s linear infinite;
         }
 
         .ticker-item {
@@ -47,15 +50,16 @@
             color: #DAA520;
             font-weight: bold;
             font-size: 1.3em;
+            /* نرجع النص عربي مظبوط داخل الشريط */
+            direction: rtl; 
             padding-right: 50px;
         }
 
-        @keyframes marquee-simple {
+        @keyframes marquee-fix {
             0%   { transform: translateX(0); }
-            100% { transform: translateX(-100%); } /* بيتحرك لحد ما يختفي تماماً من الشمال ويرجع فوراً */
+            100% { transform: translateX(-100%); } /* الحركة ثابتة لليسار دائماً */
         }
 
-        /* لو وقفت بالماوس يثبت عشان تعرف تقرأ */
         .news-ticker:hover .ticker-move { animation-play-state: paused; }
 
         #viewport { width: 100vw; background: #111; display: flex; justify-content: center; padding-top: 20px; }
@@ -75,7 +79,7 @@
 
     <div class="news-ticker">
         <div class="ticker-move">
-            <div class="ticker-item" id="ticker-content">جاري جلب آخر الإعلانات...</div>
+            <div class="ticker-item" id="ticker-content">جاري جلب الإعلانات...</div>
         </div>
     </div>
 
