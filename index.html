@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        /* ستايل صفحة النخبة - إصدار النص مليون جنيه */
         body { 
             margin: 0; 
             background: #000; 
@@ -14,7 +13,6 @@
             overflow-x: hidden; 
         }
 
-        /* الهيدر الملكي الثابت */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; 
@@ -28,7 +26,6 @@
 
         h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
-        /* زرار التواصل */
         .fb-contact {
             display: inline-flex;
             align-items: center;
@@ -45,42 +42,42 @@
         }
         .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* --- الشريط الإخباري الجديد --- */
+        /* --- الشريط الإخباري المحدث والمجرب --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
             height: 45px;
             overflow: hidden;
             position: sticky;
-            top: 103px; /* يظهر أسفل الهيدر تماماً بناءً على حجم الهيدر */
+            top: 103px; 
             z-index: 999;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
         .ticker-wrapper {
-            white-space: nowrap;
             display: inline-block;
-            padding-right: 100%;
-            animation: marquee 25s linear infinite;
+            white-space: nowrap;
+            padding-left: 100%; /* يبدأ من خارج الشاشة يميناً */
+            animation: marquee-fix 20s linear infinite;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
         }
 
-        @keyframes marquee {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        @keyframes marquee-fix {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100%); } /* يتحرك لليسار بالكامل ويعيد فوراً */
         }
 
-        /* حاوية العرض */
         #viewport {
             width: 100vw;
             background: #111;
             display: flex;
             justify-content: center;
             overflow-y: auto;
-            padding-top: 20px; /* زيادة المسافة قليلاً لضمان عدم تداخل الشريط مع الصورة */
+            padding-top: 20px; 
         }
 
         #canvas-wrapper {
@@ -134,18 +131,15 @@
     </div>
 
     <script>
-      // تحديث الصورة أوتوماتيكياً
       window.onload = function() {
           var img = document.getElementById('main-image');
           img.src = 'all.webp?v=' + Date.now();
       };
 
-      // تحميل ملف الروابط القديم
       var scriptLinks = document.createElement('script');
       scriptLinks.src = 'links.js?v=' + Date.now(); 
       document.head.appendChild(scriptLinks);
 
-      // تحميل ملف الإعلانات الجديد
       var scriptAds = document.createElement('script');
       scriptAds.src = 'ads.js?v=' + Date.now();
       document.head.appendChild(scriptAds);
