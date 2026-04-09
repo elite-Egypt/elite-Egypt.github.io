@@ -7,35 +7,37 @@
     <style>
         body { margin: 0; padding: 0; background: #000; color: #DAA520; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
-        /* تجميع الهيدر والتيكر في حاوية واحدة ثابتة */
-        .fixed-top {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+        /* حاوية المركز 1080 */
+        .main-container {
+            width: 1080px;
+            margin: 0 auto;
             background: #000;
-            width: 100%;
+            position: relative;
         }
 
+        /* الهيدر */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px 0; 
+            padding: 20px 0; 
             border-bottom: 3px solid #DAA520; 
             text-align: center;
+            width: 1080px;
         }
 
-        h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
+        h1 { margin: 0; font-size: 2.2em; color: #DAA520; text-shadow: 2px 2px 5px #000; }
         
         .fb-contact {
             display: inline-flex; align-items: center; gap: 10px; background: #DAA520;
-            color: #000; text-decoration: none; padding: 8px 20px; border-radius: 50px;
-            font-weight: bold; font-size: 0.9em; margin-top: 10px;
+            color: #000; text-decoration: none; padding: 10px 25px; border-radius: 50px;
+            font-weight: bold; font-size: 1em; margin-top: 10px;
         }
 
-        /* شريط الأخبار - ارتفاع ثابت وواضح */
+        /* شريط الأخبار المظبوط على 1080 */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 50px; 
+            height: 60px; 
+            width: 1080px;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -52,8 +54,9 @@
             display: inline-block;
             color: #DAA520;
             font-weight: bold;
-            font-size: 1.3em;
+            font-size: 1.5em;
             padding-left: 50px;
+            line-height: 60px;
         }
 
         @keyframes marquee {
@@ -61,19 +64,33 @@
             100% { transform: translateX(100%); }
         }
 
-        /* حاوية الصور */
-        #viewport { width: 100vw; background: #111; display: flex; justify-content: center; padding-top: 10px; }
-        #canvas-wrapper { position: relative; width: 1080px; background-color: #000; border: 1px solid #333; }
-        #main-image { display: block; width: 1080px; height: auto; }
+        /* حاوية الصور والروابط */
+        #viewport { 
+            width: 1080px; 
+            margin: 0 auto;
+            background: #111; 
+        }
+
+        #canvas-wrapper { 
+            position: relative; 
+            width: 1080px; 
+            background-color: #000; 
+        }
+
+        #main-image { 
+            display: block; 
+            width: 1080px; 
+            height: auto; 
+        }
     </style>
 </head>
 <body>
 
-    <div class="fixed-top">
+    <div class="main-container">
         <div class="header">
             <h1>صفحة النخبة</h1>
             <a href="https://www.facebook.com/profile.php?id=61587773337715" class="fb-contact" target="_blank">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="18">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="20">
                 تواصل معنا عبر فيسبوك
             </a>
         </div>
@@ -83,24 +100,25 @@
                 <div class="ticker-item" id="ticker-content">جاري تحميل أحدث الإعلانات...</div>
             </div>
         </div>
-    </div>
 
-    <div id="viewport">
-        <div id="canvas-wrapper">
-            <img id="main-image" usemap="#pixelmap">
-            <map name="pixelmap" id="map-links"></map>
+        <div id="viewport">
+            <div id="canvas-wrapper">
+                <img id="main-image" usemap="#pixelmap">
+                <map name="pixelmap" id="map-links"></map>
+            </div>
         </div>
     </div>
 
     <script>
-      // دالة التحديث الإجباري لمنع الكاش
+      // دالة التحديث الإجباري لمنع الكاش (Anti-Cache)
       const v = new Date().getTime();
 
       window.onload = function() {
+          // تحديث الصورة بنسخة فريش
           const img = document.getElementById('main-image');
           img.src = 'all.webp?v=' + v;
           
-          // تحميل الروابط والإعلانات بنسخة جديدة
+          // تحميل الروابط والإعلانات بنسخة فريش غصب عن المتصفح
           function forceLoad(src) {
               const s = document.createElement('script');
               s.src = src + '?v=' + v;
