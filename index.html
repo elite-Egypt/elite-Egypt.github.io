@@ -16,16 +16,16 @@
         /* الهيدر الملكي الثابت */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 10px 0; 
+            padding: 15px; 
             border-bottom: 3px solid #DAA520; 
             text-align: center;
             position: sticky; 
             top: 0;
-            z-index: 1001;
-            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 5px 0; font-size: 1.8em; color: #DAA520; }
+        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
         .fb-contact {
             display: inline-flex;
@@ -34,42 +34,47 @@
             background: #DAA520;
             color: #000;
             text-decoration: none;
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 50px;
             font-weight: bold;
             font-size: 0.9em;
-            margin-bottom: 5px;
+            margin-top: 10px;
+            transition: 0.3s;
         }
+        .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* شريط الإعلانات - الحل النهائي للحركة */
+        /* --- شريط الإعلانات المعدل 100% --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 40px;
+            height: 45px;
             overflow: hidden;
             position: sticky;
-            top: 93px; /* محسوب بدقة أسفل الهيدر */
-            z-index: 1000;
-            width: 100%;
-            direction: ltr; /* هنشغله LTR داخلياً عشان نتحكم في الحركة صح */
+            top: 103px; /* محسوب بدقة أسفل الهيدر */
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            /* سر الحركة هنا: تثبيت الاتجاه ltr */
+            direction: ltr; 
         }
 
         .ticker-wrapper {
             display: inline-block;
             white-space: nowrap;
-            padding-right: 100%;
-            animation: marquee 20s linear infinite;
+            /* النص يبدأ من أقصى يمين الشاشة */
+            padding-left: 100%; 
+            animation: marquee 30s linear infinite;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            line-height: 40px;
-            direction: rtl; /* نرجع النص عربي جوه الشريط */
+            /* نرجع النص عربي */
+            direction: rtl; 
         }
 
-        /* الحركة الصامتة من اليمين لليسار بدون فراغات عشوائية */
+        /* حركة دائرية تبدأ من اليمين وتخرج من الشمال وتلف فوراً */
         @keyframes marquee {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
         }
 
         #viewport {
@@ -77,7 +82,8 @@
             background: #111;
             display: flex;
             justify-content: center;
-            padding-top: 5px;
+            overflow-y: auto;
+            padding-top: 20px;
         }
 
         #canvas-wrapper {
@@ -95,6 +101,8 @@
             height: 10000px;
             image-rendering: -webkit-optimize-contrast; 
         }
+
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body>
@@ -108,7 +116,9 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper" id="ticker-content">جاري التحميل...</div>
+        <div class="ticker-wrapper" id="ticker-content">
+            جاري تحميل أحدث الإعلانات...
+        </div>
     </div>
 
     <div id="viewport">
@@ -120,18 +130,24 @@
 
     <script>
       window.onload = function() {
-          const v = Date.now();
+          const timestamp = Date.now();
+          
+          // تحديث الصورة
           const img = document.getElementById('main-image');
-          img.src = 'all.webp?v=' + v;
+          img.src = 'all.webp?v=' + timestamp;
 
+          // تحديث الروابط
           const scriptLinks = document.createElement('script');
-          scriptLinks.src = 'links.js?v=' + v;
+          scriptLinks.src = 'links.js?v=' + timestamp; 
           document.head.appendChild(scriptLinks);
 
+          // تحديث الإعلانات
           const scriptAds = document.createElement('script');
-          scriptAds.src = 'ads.js?v=' + v;
+          scriptAds.src = 'ads.js?v=' + timestamp;
           document.head.appendChild(scriptAds);
       };
     </script>
+
 </body>
 </html>
+
