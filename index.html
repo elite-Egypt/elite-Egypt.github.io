@@ -5,58 +5,55 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        /* التنسيق الأساسي لمنع أي تلاعب بالهوامش */
         body { 
             margin: 0; background: #000; color: #DAA520; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             overflow-x: hidden; 
         }
 
-        /* الهيدر الملكي الثابت */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; border-bottom: 3px solid #DAA520; 
             text-align: center; position: sticky; top: 0; z-index: 2000;
-            height: 70px; /* طول ثابت للهيدر */
         }
 
-        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; }
+        h1 { margin: 0; font-size: 1.8em; }
         
         .fb-contact {
             display: inline-flex; align-items: center; gap: 10px;
             background: #DAA520; color: #000; text-decoration: none;
             padding: 5px 15px; border-radius: 50px; font-weight: bold;
-            font-size: 0.9em; margin-top: 5px;
+            margin-top: 5px;
         }
 
-        /* شريط الإعلانات - الحل الفولاذي اللي جربته وشغال مسطرة */
+        /* شريط الإعلانات - الحل القاطع لاتجاه الحركة */
         .news-ticker {
             background: #000; border-bottom: 2px solid #DAA520;
             height: 45px; overflow: hidden; position: sticky;
-            top: 103px; /* محسوب بدقة أسفل الهيدر */
-            z-index: 1999; width: 100%;
-            direction: ltr !important; /* تثبيت الاتجاه للتحكم في الـ Animation */
+            top: 103px; z-index: 1999; width: 100%;
+            /* إجبار الشريط يكون LTR عشان نتحكم في المسطرة بالـ Left */
+            direction: ltr !important; 
         }
 
         .ticker-wrapper {
-            display: inline-block;
+            position: absolute;
             white-space: nowrap;
             line-height: 45px;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            direction: rtl !important; /* النص يفضل يتقرأ عربي صح */
-            padding-left: 100%; /* يبدأ الكلام من أقصى اليمين */
-            animation: elite-marquee 40s linear infinite; /* سرعة موزونة لـ 10 إعلانات */
+            /* النص يرجع عربي */
+            direction: rtl !important; 
+            /* الحركة تبدأ من أقصى اليمين (100%) وتنتهي في أقصى الشمال (-100%) */
+            animation: elite-fix 35s linear infinite;
         }
 
-        /* الحركة الصامتة والفورية: تبدأ من اليمين وتختفي في الشمال وتلف فوراً */
-        @keyframes elite-marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
+        /* الحركة بالـ Left مستحيل المتصفح يعكسها */
+        @keyframes elite-fix {
+            0% { left: 100%; }
+            100% { left: -100%; }
         }
 
-        /* حاوية العرض الرئيسية */
         #viewport {
             width: 100vw; display: flex; justify-content: center;
             background: #111; padding-top: 10px;
@@ -64,7 +61,7 @@
 
         #canvas-wrapper {
             position: relative; width: 1080px; height: 10000px; 
-            background-color: #000; border-left: 1px solid #333; border-right: 1px solid #333;
+            background-color: #000;
         }
 
         #main-image { display: block; width: 1080px; height: 10000px; }
@@ -72,7 +69,7 @@
 </head>
 <body>
 
-    <div class="header" id="top-header">
+    <div class="header">
         <h1>صفحة النخبة</h1>
         <a href="https://www.facebook.com/profile.php?id=61587773337715" class="fb-contact" target="_blank">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="18">
@@ -81,7 +78,7 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper" id="ticker-content">جاري تحميل أحدث الإعلانات...</div>
+        <div class="ticker-wrapper" id="ticker-content">جاري التحميل...</div>
     </div>
 
     <div id="viewport">
@@ -92,25 +89,21 @@
     </div>
 
     <script>
-      // التحديث الأوتوماتيكي لكل شيء فور التحميل
       window.onload = function() {
-          const bust = Date.now(); // لضمان عدم تحميل نسخة قديمة من الكاش
+          const bust = Date.now();
           
-          // 1. تحديث الصورة الكبيرة
           const mainImg = document.getElementById('main-image');
           mainImg.src = 'all.webp?v=' + bust;
 
-          // 2. تحميل روابط الضغط (links.js)
           const scriptLinks = document.createElement('script');
           scriptLinks.src = 'links.js?v=' + bust;
           document.head.appendChild(scriptLinks);
 
-          // 3. تحميل الإعلانات (ads.js) وتنسيقها ورا بعض
           const scriptAds = document.createElement('script');
           scriptAds.src = 'ads.js?v=' + bust;
           scriptAds.onload = function() {
-              // التأكد إن الإعلانات ماشية ورا بعض وبينها فواصل شيك
               if (typeof ads !== 'undefined' && ads.length > 0) {
+                  // وضع الإعلانات ورا بعض مع فاصل شيك
                   document.getElementById('ticker-content').innerHTML = ads.join(' &nbsp;&nbsp;&nbsp;&nbsp; ★ &nbsp;&nbsp;&nbsp;&nbsp; ');
               }
           };
@@ -119,4 +112,3 @@
     </script>
 </body>
 </html>
-
