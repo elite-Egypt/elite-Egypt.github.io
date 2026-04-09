@@ -13,7 +13,6 @@
             overflow-x: hidden; 
         }
 
-        /* الهيدر الملكي */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; 
@@ -35,7 +34,7 @@
             margin-top: 10px;
         }
 
-        /* --- شريط الإعلانات: الحل الجذري --- */
+        /* الحل النهائي والوحيد اللي جربته وشغال مسطرة */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -45,24 +44,26 @@
             top: 103px; 
             z-index: 999;
             width: 100%;
-            display: block;
+            direction: ltr !important; /* إجبار الشريط يكون يسار ليمين تقنياً */
         }
 
         .ticker-wrapper {
-            position: absolute;
-            white-space: nowrap;
             display: inline-block;
+            white-space: nowrap;
             line-height: 45px;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            /* الحركة تعتمد على الـ left لضمان الاتجاه */
-            animation: marquee-final 25s linear infinite;
+            /* سر الصنعة هنا: نستخدم right بدل translateX */
+            position: absolute;
+            right: -100%; 
+            animation: marquee-elite-fixed 30s linear infinite;
+            direction: rtl !important; /* النص يفضل عربي */
         }
 
-        @keyframes marquee-final {
-            0% { left: 100%; }
-            100% { left: -150%; } /* يخرج تماماً ويلف */
+        @keyframes marquee-elite-fixed {
+            0% { right: -100%; }   /* يبدأ من اليمين خالص بره الشاشة */
+            100% { right: 100%; }  /* يخرج من الشمال خالص */
         }
 
         #viewport {
@@ -70,7 +71,6 @@
             background: #111;
             display: flex;
             justify-content: center;
-            overflow-y: auto;
             padding-top: 20px;
         }
 
