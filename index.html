@@ -7,10 +7,20 @@
     <style>
         body { margin: 0; padding: 0; background: #000; color: #DAA520; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
 
+        /* تجميع الهيدر والتيكر في حاوية واحدة ثابتة */
+        .fixed-top {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #000;
+            width: 100%;
+        }
+
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px 0; border-bottom: 3px solid #DAA520; text-align: center;
-            position: sticky; top: 0; z-index: 1000;
+            padding: 15px 0; 
+            border-bottom: 3px solid #DAA520; 
+            text-align: center;
         }
 
         h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
@@ -21,18 +31,14 @@
             font-weight: bold; font-size: 0.9em; margin-top: 10px;
         }
 
-        /* --- حل مشكلة القص النهائي --- */
+        /* شريط الأخبار - ارتفاع ثابت وواضح */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 60px; /* زودنا الارتفاع هنا عشان الكلام يظهر كامل وميتقصش */
+            height: 50px; 
             overflow: hidden;
-            position: sticky;
-            top: 103px; /* تأكد إن الرقم ده متوافق مع طول الهيدر */
-            z-index: 999;
-            width: 100%;
             display: flex;
-            align-items: center; /* بيخلي النص في نص المستطيل بالظبط */
+            align-items: center;
         }
 
         .ticker-move {
@@ -48,7 +54,6 @@
             font-weight: bold;
             font-size: 1.3em;
             padding-left: 50px;
-            line-height: 60px; /* لضمان إن الحروف الطويلة متتقصش */
         }
 
         @keyframes marquee {
@@ -56,24 +61,27 @@
             100% { transform: translateX(100%); }
         }
 
-        #viewport { width: 100vw; background: #111; display: flex; justify-content: center; padding-top: 20px; }
-        #canvas-wrapper { position: relative; width: 1080px; height: 10000px; background-color: #000; border: 1px solid #333; }
-        #main-image { display: block; width: 1080px; height: 10000px; }
+        /* حاوية الصور */
+        #viewport { width: 100vw; background: #111; display: flex; justify-content: center; padding-top: 10px; }
+        #canvas-wrapper { position: relative; width: 1080px; background-color: #000; border: 1px solid #333; }
+        #main-image { display: block; width: 1080px; height: auto; }
     </style>
 </head>
 <body>
 
-    <div class="header" id="myHeader">
-        <h1>صفحة النخبة</h1>
-        <a href="https://www.facebook.com/profile.php?id=61587773337715" class="fb-contact" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="18">
-            تواصل معنا عبر فيسبوك
-        </a>
-    </div>
+    <div class="fixed-top">
+        <div class="header">
+            <h1>صفحة النخبة</h1>
+            <a href="https://www.facebook.com/profile.php?id=61587773337715" class="fb-contact" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" width="18">
+                تواصل معنا عبر فيسبوك
+            </a>
+        </div>
 
-    <div class="news-ticker">
-        <div class="ticker-move">
-            <div class="ticker-item" id="ticker-content">جاري جلب أحدث الإعلانات...</div>
+        <div class="news-ticker">
+            <div class="ticker-move">
+                <div class="ticker-item" id="ticker-content">جاري تحميل أحدث الإعلانات...</div>
+            </div>
         </div>
     </div>
 
@@ -85,31 +93,23 @@
     </div>
 
     <script>
-      // دالة التحديث الإجباري (Force Refresh) لكل حاجة
-      const v = new Date().getTime(); // رقم فريد يتغير كل مللي ثانية
+      // دالة التحديث الإجباري لمنع الكاش
+      const v = new Date().getTime();
 
       window.onload = function() {
-          // تحديث الصورة
           const img = document.getElementById('main-image');
           img.src = 'all.webp?v=' + v;
-
-          // ظبط مكان المستطيل أوتوماتيك عشان ميتقصش مهما كان حجم الهيدر
-          const header = document.getElementById('myHeader');
-          const ticker = document.querySelector('.news-ticker');
-          ticker.style.top = header.offsetHeight + 'px';
+          
+          // تحميل الروابط والإعلانات بنسخة جديدة
+          function forceLoad(src) {
+              const s = document.createElement('script');
+              s.src = src + '?v=' + v;
+              document.head.appendChild(s);
+          }
+          forceLoad('links.js');
+          forceLoad('ads.js');
       };
-
-      // تحميل الروابط والإعلانات "طازة" غصب عن المتصفح
-      function forceLoad(src) {
-          const s = document.createElement('script');
-          s.src = src + '?v=' + v;
-          document.head.appendChild(s);
-      }
-      
-      forceLoad('links.js');
-      forceLoad('ads.js');
     </script>
 
 </body>
 </html>
-
