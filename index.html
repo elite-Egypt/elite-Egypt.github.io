@@ -22,10 +22,9 @@
             position: sticky; 
             top: 0;
             z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
         }
 
-        h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
+        h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
         
         .fb-contact {
             display: inline-flex;
@@ -33,10 +32,10 @@
             background: #DAA520; color: #000;
             text-decoration: none; padding: 8px 20px;
             border-radius: 50px; font-weight: bold;
-            font-size: 0.9em; margin-top: 10px;
+            margin-top: 10px;
         }
 
-        /* --- الشريط الإخباري: إصدار الإجبار الميكانيكي --- */
+        /* --- شريط الإعلانات: الحل الجذري --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -45,29 +44,25 @@
             position: sticky;
             top: 103px; 
             z-index: 999;
-            display: flex;
-            align-items: center;
             width: 100%;
-            /* إلغاء أي تأثير للغة على اتجاه الحركة */
-            direction: ltr !important; 
+            display: block;
         }
 
         .ticker-wrapper {
-            display: inline-block;
+            position: absolute;
             white-space: nowrap;
+            display: inline-block;
+            line-height: 45px;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            /* إجبار الحركة تبدأ من بره الـ 1080 بكسل */
-            animation: marquee-elite 25s linear infinite;
-            /* النص يفضل يتقرأ صح من اليمين */
-            direction: rtl !important;
+            /* الحركة تعتمد على الـ left لضمان الاتجاه */
+            animation: marquee-final 25s linear infinite;
         }
 
-        /* حركة إجبارية بالبكسل من اليمين للشمال */
-        @keyframes marquee-elite {
-            0% { transform: translateX(1080px); }
-            100% { transform: translateX(-1500px); }
+        @keyframes marquee-final {
+            0% { left: 100%; }
+            100% { left: -150%; } /* يخرج تماماً ويلف */
         }
 
         #viewport {
@@ -92,7 +87,6 @@
             display: block;
             width: 1080px;
             height: 10000px;
-            image-rendering: -webkit-optimize-contrast; 
         }
     </style>
 </head>
@@ -120,13 +114,12 @@
     <script>
       window.onload = function() {
           const v = Date.now();
-          // تحديث الصورة
           document.getElementById('main-image').src = 'all.webp?v=' + v;
-          // تحديث الروابط
+          
           const sL = document.createElement('script');
           sL.src = 'links.js?v=' + v;
           document.head.appendChild(sL);
-          // تحديث الإعلانات
+
           const sA = document.createElement('script');
           sA.src = 'ads.js?v=' + v;
           document.head.appendChild(sA);
