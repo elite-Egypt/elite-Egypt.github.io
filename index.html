@@ -13,18 +13,19 @@
             overflow-x: hidden; 
         }
 
-        /* الهيدر الملكي */
+        /* الهيدر الملكي الثابت */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
-            padding: 15px; 
+            padding: 10px 0; 
             border-bottom: 3px solid #DAA520; 
             text-align: center;
             position: sticky; 
             top: 0;
-            z-index: 1000;
+            z-index: 1001;
+            height: auto;
         }
 
-        h1 { margin: 0; font-size: 1.8em; color: #DAA520; }
+        h1 { margin: 5px 0; font-size: 1.8em; color: #DAA520; }
         
         .fb-contact {
             display: inline-flex;
@@ -33,59 +34,62 @@
             background: #DAA520;
             color: #000;
             text-decoration: none;
-            padding: 8px 20px;
+            padding: 5px 15px;
             border-radius: 50px;
             font-weight: bold;
-            margin-top: 10px;
+            font-size: 0.9em;
+            margin-bottom: 5px;
         }
 
-        /* تصليح الشريط الإخباري */
+        /* شريط الإعلانات - تصليح المسار */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
-            height: 45px;
+            height: 40px;
             overflow: hidden;
             position: sticky;
-            top: 103px; 
-            z-index: 999;
-            display: flex;
-            align-items: center;
+            top: 90px; /* مكان ثابت أسفل الهيدر */
+            z-index: 1000;
+            width: 100%;
         }
 
         .ticker-wrapper {
             display: inline-block;
             white-space: nowrap;
-            padding-left: 100%; /* يبدأ الكلام من اليمين خالص */
-            animation: marquee 25s linear infinite; /* سرعة موزونة */
+            padding-right: 100%; /* الفراغ يبدأ من اليمين */
+            animation: marquee 20s linear infinite;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
+            line-height: 40px;
         }
 
-        /* الحركة الصحيحة من اليمين لليسار مع الدوران الفوري */
+        /* حركة دائرية صحيحة 100% */
         @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(100%); }
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
         }
 
         #viewport {
             width: 100vw;
+            background: #111;
             display: flex;
             justify-content: center;
-            padding-top: 10px;
+            padding-top: 5px;
         }
 
         #canvas-wrapper {
             position: relative;
             width: 1080px; 
-            height: 10000px;
-            background: #000;
+            height: 10000px; 
+            background-color: #000;
         }
 
         #main-image {
             display: block;
             width: 1080px;
             height: 10000px;
+            image-rendering: -webkit-optimize-contrast; 
         }
     </style>
 </head>
@@ -125,6 +129,7 @@
           document.head.appendChild(scriptAds);
       };
     </script>
+
 </body>
 </html>
 
