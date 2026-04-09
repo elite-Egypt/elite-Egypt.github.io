@@ -36,7 +36,7 @@
             font-size: 0.9em; margin-top: 10px;
         }
 
-        /* --- شريط الإعلانات: الإصدار الفولاذي --- */
+        /* --- الشريط الإخباري: إصدار الإجبار الميكانيكي --- */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
@@ -47,25 +47,27 @@
             z-index: 999;
             display: flex;
             align-items: center;
-            direction: ltr !important; /* إجبار الاتجاه تقنياً لمنع العك */
+            width: 100%;
+            /* إلغاء أي تأثير للغة على اتجاه الحركة */
+            direction: ltr !important; 
         }
 
         .ticker-wrapper {
             display: inline-block;
             white-space: nowrap;
-            /* يبدأ من اليمين (خارج الشاشة) */
-            transform: translateX(1080px); 
-            animation: marquee 25s linear infinite;
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
-            direction: rtl !important; /* النص نفسه يفضل عربي */
+            /* إجبار الحركة تبدأ من بره الـ 1080 بكسل */
+            animation: marquee-elite 25s linear infinite;
+            /* النص يفضل يتقرأ صح من اليمين */
+            direction: rtl !important;
         }
 
-        /* حركة دقيقة: من أقصى اليمين لأقصى الشمال */
-        @keyframes marquee {
+        /* حركة إجبارية بالبكسل من اليمين للشمال */
+        @keyframes marquee-elite {
             0% { transform: translateX(1080px); }
-            100% { transform: translateX(-100%); }
+            100% { transform: translateX(-1500px); }
         }
 
         #viewport {
@@ -105,7 +107,7 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper" id="ticker-content">جاري التحميل...</div>
+        <div class="ticker-wrapper" id="ticker-content">جاري تحميل أحدث الإعلانات...</div>
     </div>
 
     <div id="viewport">
@@ -117,15 +119,16 @@
 
     <script>
       window.onload = function() {
-          const t = Date.now();
-          document.getElementById('main-image').src = 'all.webp?v=' + t;
-
+          const v = Date.now();
+          // تحديث الصورة
+          document.getElementById('main-image').src = 'all.webp?v=' + v;
+          // تحديث الروابط
           const sL = document.createElement('script');
-          sL.src = 'links.js?v=' + t;
+          sL.src = 'links.js?v=' + v;
           document.head.appendChild(sL);
-
+          // تحديث الإعلانات
           const sA = document.createElement('script');
-          sA.src = 'ads.js?v=' + t;
+          sA.src = 'ads.js?v=' + v;
           document.head.appendChild(sA);
       };
     </script>
