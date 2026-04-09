@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
-        /* ستايل صفحة النخبة - إصدار النص مليون جنيه */
         body { 
             margin: 0; 
             background: #000; 
@@ -45,14 +44,14 @@
         }
         .fb-contact:hover { background: #fff; transform: scale(1.05); }
 
-        /* --- الشريط الإخباري الجديد --- */
+        /* الشريط الإخباري (Ticker) - سرعة احترافية ودوران فوري */
         .news-ticker {
             background: #000;
             border-bottom: 2px solid #DAA520;
             height: 45px;
             overflow: hidden;
             position: sticky;
-            top: 103px; /* يظهر أسفل الهيدر تماماً بناءً على حجم الهيدر */
+            top: 103px; 
             z-index: 999;
             display: flex;
             align-items: center;
@@ -61,15 +60,15 @@
         .ticker-wrapper {
             white-space: nowrap;
             display: inline-block;
-            padding-right: 100%;
-            animation: marquee 40s linear infinite;
+            padding-left: 100%; 
+            animation: marquee 35s linear infinite; /* سرعة التلفزيون */
             color: #DAA520;
             font-weight: bold;
             font-size: 1.2em;
         }
 
         @keyframes marquee {
-            0% { transform: translateX(-100%); }
+            0% { transform: translateX(0); }
             100% { transform: translateX(100%); }
         }
 
@@ -80,7 +79,7 @@
             display: flex;
             justify-content: center;
             overflow-y: auto;
-            padding-top: 20px; /* زيادة المسافة قليلاً لضمان عدم تداخل الشريط مع الصورة */
+            padding-top: 10px;
         }
 
         #canvas-wrapper {
@@ -97,15 +96,9 @@
             width: 1080px;
             height: 10000px;
             image-rendering: -webkit-optimize-contrast; 
-            background-image: 
-                linear-gradient(to right, #1a1a1a 1px, transparent 1px),
-                linear-gradient(to bottom, #1a1a1a 1px, transparent 1px);
-            background-size: 108px 108px;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
     </style>
 </head>
 <body>
@@ -119,36 +112,35 @@
     </div>
 
     <div class="news-ticker">
-        <div class="ticker-wrapper" id="ticker-content">
-            جاري تحميل أحدث الإعلانات...
-        </div>
+        <div class="ticker-wrapper" id="ticker-content">جاري تحميل أحدث الإعلانات...</div>
     </div>
 
     <div id="viewport">
         <div id="canvas-wrapper">
             <img id="main-image" usemap="#pixelmap">
-            
-            <map name="pixelmap" id="map-links">
-            </map>
+            <map name="pixelmap" id="map-links"></map>
         </div>
     </div>
 
     <script>
-      // تحديث الصورة أوتوماتيكياً
+      // دالة التحديث الشاملة (تجاوز الكاش لكل الملفات)
       window.onload = function() {
-          var img = document.getElementById('main-image');
-          img.src = 'all.webp?v=' + Date.now();
+          const v = Date.now(); // بصمة زمنية فريدة
+          
+          // 1. تحديث الصورة فوراً
+          const img = document.getElementById('main-image');
+          img.src = 'all.webp?v=' + v;
+
+          // 2. تحديث الروابط (links.js)
+          const scriptLinks = document.createElement('script');
+          scriptLinks.src = 'links.js?v=' + v;
+          document.head.appendChild(scriptLinks);
+
+          // 3. تحديث الإعلانات (ads.js)
+          const scriptAds = document.createElement('script');
+          scriptAds.src = 'ads.js?v=' + v;
+          document.head.appendChild(scriptAds);
       };
-
-      // تحميل ملف الروابط القديم
-      var scriptLinks = document.createElement('script');
-      scriptLinks.src = 'links.js?v=' + Date.now(); 
-      document.head.appendChild(scriptLinks);
-
-      // تحميل ملف الإعلانات الجديد
-      var scriptAds = document.createElement('script');
-      scriptAds.src = 'ads.js?v=' + Date.now();
-      document.head.appendChild(scriptAds);
     </script>
 
 </body>
