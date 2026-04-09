@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=1080">
     <title>صفحة النخبة | Elite Page</title>
     <style>
+        /* ستايل صفحة النخبة - المقاسات الأصلية */
         body { 
             margin: 0; 
             background: #000; 
@@ -13,7 +14,7 @@
             overflow-x: hidden; 
         }
 
-        /* الهيدر الملكي - لغينا الـ sticky عشان القص */
+        /* الهيدر الملكي - نفس مقاساتك القديمة بالظبط */
         .header { 
             background: linear-gradient(145deg, #1a1a1a, #222); 
             padding: 15px; 
@@ -25,23 +26,37 @@
         h1 { margin: 0; font-size: 1.8em; text-shadow: 2px 2px 4px #000; color: #DAA520; }
         
         .fb-contact {
-            display: inline-flex; align-items: center; gap: 10px; background: #DAA520; color: #000;
-            text-decoration: none; padding: 8px 20px; border-radius: 50px; font-weight: bold;
-            font-size: 0.9em; margin-top: 10px; transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #DAA520;
+            color: #000;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-top: 10px;
+            transition: 0.3s;
         }
 
-        /* شريط الإعلانات العريض */
+        /* شريط الإعلانات - منفصل تماماً */
         .ticker-container {
-            background: #000; border-bottom: 1px solid #333;
-            overflow: hidden; white-space: nowrap; 
-            padding: 25px 0; /* عرضناه عشان يكون واضح */
+            background: #000; 
+            border-bottom: 1px solid #333;
+            overflow: hidden; 
+            white-space: nowrap; 
+            padding: 15px 0; /* عرض الشريط */
             width: 100%;
         }
 
         .ticker-text {
-            display: inline-block; padding-left: 100%;
+            display: inline-block; 
+            padding-left: 100%;
             animation: ticker 30s linear infinite;
-            font-weight: bold; font-size: 1.4em; color: #DAA520;
+            font-weight: bold; 
+            font-size: 1.2em; 
+            color: #DAA520;
         }
 
         @keyframes ticker {
@@ -49,18 +64,18 @@
             100% { transform: translateX(100%); }
         }
 
-        /* حاوية العرض - التصليح النهائي هنا */
+        /* حاوية العرض */
         #viewport {
             width: 100vw;
             background: #111;
-            display: block; /* لغينا الفليكس عشان ميرفعش الصورة لفوق */
+            display: block; /* لغينا الفليكس عشان نمنع القص */
             text-align: center;
         }
 
         #canvas-wrapper {
             position: relative;
             width: 1080px; 
-            margin: 0 auto; /* توسيط الحاوية */
+            margin: 0 auto;
             height: 10000px; 
             background-color: #000;
             border-left: 1px solid #333;
@@ -71,7 +86,7 @@
             display: block;
             width: 1080px;
             height: 10000px;
-            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -webkit-optimize-contrast; 
         }
     </style>
 </head>
@@ -101,12 +116,11 @@
           var img = document.getElementById('main-image');
           img.src = 'all.webp?v=' + Date.now();
 
-          // جلب الإعلانات من الملف الخارجي
           fetch('ads.json?v=' + Date.now())
               .then(res => res.json())
               .then(adsList => {
                   let activeAds = [];
-                  const now = new Date().getTime();
+                  let now = new Date().getTime();
                   adsList.forEach(ad => {
                       let expiry = new Date(ad.expiry).getTime();
                       if (now < expiry) activeAds.push(ad.text);
@@ -116,9 +130,7 @@
                   } else {
                       document.getElementById('ticker-box').style.display = 'none';
                   }
-              }).catch(() => {
-                  document.getElementById('ticker-box').style.display = 'none';
-              });
+              }).catch(() => { document.getElementById('ticker-box').style.display = 'none'; });
       };
 
       var script = document.createElement('script');
@@ -127,3 +139,4 @@
     </script>
 </body>
 </html>
+
